@@ -1,10 +1,10 @@
 # Data Book
 
-Folder | File | Description | Contents
-:--|:--|:--|:--
-assessment
-business
-gpw
-sfpd
-tiger
-uscensus
+Folder | File | Description | Contents | Scale
+:--|:--|:--|:--|:--
+[assessment](https://data.sfgov.org/City-Management-and-Ethics/Secured-Property-Assessment-Roll-FY13-Q4/e6sm-rank) | Secured\_Property\_Assessment\_Roll\_FY13\_Q4.csv | Assessed property values | Address, taxable value, lat/lon | 204,541 samples, 26.7 MB
+[business](https://data.sfgov.org/Economy-and-Community/Registered-Business-Locations-San-Francisco/g8m3-pdis) | Registered\_Business\_Locations\_-\_San\_Francisco.csv | Registered businesses | Address, 'class code', lat/lon | 156,111 samples, 38.2 MB
+[sfpd](https://data.sfgov.org/Public-Safety/SFPD-Incidents-from-1-January-2003/tmnf-yvry) | SFPD\_Incidents\_-\_from\_1\_January\_2003.csv | SFPD incident reports from Jan 2003 - Oct 2015 | Date, time, Category, District, lat/lon | 1,830,772 incidents, 375.5 MB
+[uscensus](http://factfinder.census.gov/) | <ul><li>ACS\_13\_5YR\_B19001.zip</li> <li>DEC\_10\_SF1\_P12.zip</li> <li>DEC\_10\_SF1\_H13.zip</li> <li>DEC\_10\_SF1\_P1.zip</li></ul> | <ul><li>Income, block group</li><li>Age/gender by block</li><li>Household size by block</li><li>Population by block</li></ul> | <ul><li>Income count, 16 buckets</li><li>Age/gender, 23 bins per gender</li><li>Household count, 1-7+ bin</li><li>Population count</li></ul> | block group: 582 samples; block: 7387 samples
+[tiger](http://www.census.gov/geo/maps-data/data/tiger.html) | tlgdb\_2015\_a\_06\_ca.gdb.zip | Address to lat/lon lookup database, CA | | 219 MB (zipped)
+[gpw](http://sedac.ciesin.columbia.edu/data/set/gpw-v3-population-density) | usa\_gpwv3\_pcount\_ascii\_25.zip | Gridded population of the world | Count on grid in 2.5 arc-minute buckets (0.042 deg) | Earth, 165 MB
