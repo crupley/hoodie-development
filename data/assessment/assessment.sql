@@ -61,7 +61,7 @@ CREATE TABLE assessment (
 
 
 ALTER TABLE assessment_raw OWNER TO postgres;
-
+ALTER TABLE assessment OWNER TO postgres;
 --
 -- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
