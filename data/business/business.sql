@@ -54,11 +54,22 @@ CREATE TABLE business_raw (
 
 );
 
---CREATE TABLE business ();
+CREATE TABLE business (
+    Ownership_Name          text,
+    DBA_Name                text,
+    Street_Address          text,
+    City                    text,
+    State                   text,
+    Zip_Code                float,
+    major_class             text,
+    minor_class             int,
+    lat                     float,
+    lon                     float
+);
 
 
 ALTER TABLE business_raw OWNER TO postgres;
---ALTER TABLE business OWNER TO postgres;
+ALTER TABLE business OWNER TO postgres;
 
 --
 -- Name: public; Type: ACL; Schema: -; Owner: postgres

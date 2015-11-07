@@ -106,7 +106,7 @@ def make_business():
 		VALUES (%s)'''
 
 	# insert raw data
-	# db_insert(df, q_string)
+	db_insert(df, q_string)
 
 	### clean data
 
@@ -152,5 +152,23 @@ def make_business():
          'PBC Code',
          'Business_Location'], axis = 1, inplace=True)
 
-	return df
+	q_string = '''
+	INSERT INTO business (Ownership_Name,
+						  DBA_Name,
+						  Street_Address,
+						  City,
+						  State,
+						  Zip_Code,
+						  major_class,
+						  minor_class,
+						  lat,
+						  lon)
+	VALUES (%s)'''
+
+	# insert raw data
+	db_insert(df, q_string)
+
+
+
+	return
 
