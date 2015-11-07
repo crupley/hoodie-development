@@ -7,13 +7,25 @@ import psycopg2
 import pdb
 
 
-def make_assessment():
-
-	df = pd.read_csv('../data/assessment/Secured_Property_Assessment_Roll_FY13_Q4.csv')
-
+def db_insert(df, q_string):
 	# insert raw data into db
 	n_cols = df.shape[1]
 	esses = '%s, ' * (n_cols - 1) + '%s'
+	q_string = q_string % esses
+
+	conn = psycopg2.connect(dbname='hoodie', user='postgres', host='/tmp')
+	c = conn.cursor()
+
+	for idx in df.index:
+		values = df.ix[idx].values
+		c.execute(q_string, values)
+		conn.commit()
+	conn.close()
+
+# assessment data
+def make_assessment():
+	df = pd.read_csv('../data/assessment/Secured_Property_Assessment_Roll_FY13_Q4.csv')
+
 	q_string = '''
 		INSERT INTO assessment_raw (Situs_Address,
 									Situs_Zip,
@@ -25,16 +37,10 @@ def make_assessment():
 									District,
 									Taxable_Value,
 									geom)
-		VALUES (%s)''' % esses
+		VALUES (%s)'''
 
-	conn = psycopg2.connect(dbname='hoodie', user='postgres', host='/tmp')
-	c = conn.cursor()
-
-	for idx in df.index:
-		values = df.ix[idx].values
-		c.execute(q_string, values)
-		conn.commit()
-	conn.close()
+	# insert raw data
+	db_insert(df, q_string)
 
 	# clean data
 	df.drop('Fixtures_Value', axis = 1, inplace = True)
@@ -50,8 +56,6 @@ def make_assessment():
 	df.drop('geom', axis = 1, inplace = True)
 
 	# insert cleaned data into db
-	n_cols = df.shape[1]
-	esses = '%s, ' * (n_cols - 1) + '%s'
 	q_string = '''
 		INSERT INTO assessment (Situs_Address,
 								Situs_Zip,
@@ -63,15 +67,8 @@ def make_assessment():
 								Taxable_Value,
 								lat,
 								lon)
-		VALUES (%s)''' % esses
+		VALUES (%s)'''
 
-	conn = psycopg2.connect(dbname='hoodie', user='postgres', host='/tmp')
-	c = conn.cursor()
-
-	for idx in df.index:
-		values = df.ix[idx].values
-		c.execute(q_string, values)
-		conn.commit()
-	conn.close()
+	db_insert(df, q_string)
 
 	return
