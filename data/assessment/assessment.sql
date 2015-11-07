@@ -46,6 +46,19 @@ CREATE TABLE assessment_raw (
     geom                text
 );
 
+CREATE TABLE assessment (
+    Situs_Address       text,
+    Situs_Zip           text,
+    APN                 text,
+    RE                  float,
+    RE_Improvements     float,
+    PP_Value            float,
+    District            text,
+    Taxable_Value       float,
+    lat                 float,
+    lon                 float
+);
+
 
 ALTER TABLE assessment_raw OWNER TO postgres;
 
