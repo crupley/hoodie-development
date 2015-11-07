@@ -75,17 +75,41 @@ def make_assessment():
 	return
 
 def getlatlon(v):
-    if type(v) == float: return 0, 0
-    s = v.split('\n')[-1]
-    if len(s) == 0: return 0, 0
-    return eval(s)
+	'''
+	INPUT: formatted address, string
+	OUTPUT: latitude, longitude, tuple
+
+	Helper function for clean_business. Extracts latitude, longitude
+	tuple from address cell
+	'''
+
+	# check for nan
+	if type(v) == float: return 0, 0
+	s = v.split('\n')[-1]
+
+	# check for missing lat/lon
+	if len(s) == 0: return 0, 0
+
+	# convert string to tuple
+	return eval(s)
 
 def load_business():
+	'''
+	INPUT: None
+	OUTPUT: business data, DataFrame
+	Function to load the business dataset and return it in a dataframe
+	'''
 	fn = '../data/business/Registered_Business_Locations_-_San_Francisco.csv'
 	df = pd.read_csv(fn)
 	return df
 
 def make_business():
+	'''
+	INPUT: None
+	OUTPUT: None
+	Inserts data from the business dataset into project database
+	both in raw form and cleaned form
+	'''
 
 	# insert raw data
 	df = load_business()
@@ -131,14 +155,11 @@ def make_business():
 
 	# insert raw data
 	db_insert(df, q_string)
-
-
-
 	return
 
 def clean_business(df):
 	### clean data
-	pdb.set_trace()
+
 	# drop rows where location has an end date
 	df = df[pd.isnull(df.Location_End_Date)]
 
@@ -184,5 +205,68 @@ def clean_business(df):
          'Business_Location'], axis = 1, inplace=True)
 
 	return df
+
+def load_sfpd():
+	df = pd.read_csv('../data/sfpd/SFPD_Incidents_-_from_1_January_2003.csv')
+	return df
+
+def clean_sfpd(df):
+
+	df.rename(columns={'X': 'lon', 'Y': 'lat'}, inplace=True)
+
+	df['datetime'] = df.Date + ' ' + df.Time
+	df.drop(['IncidntNum',
+			 'DayOfWeek',
+			 'Resolution',
+			 'Location',
+			 'PdId',
+			 'Date',
+			 'Time'], axis = 1, inplace = True)
+
+
+	return df
+
+def make_sfpd():
+	'''
+	INPUT: None
+	OUTPUT: None
+	Inserts data from the business dataset into project database
+	both in raw form and cleaned form
+	'''
+
+	# insert raw data
+	df = load_sfpd()
+	q_string = '''
+		INSERT INTO sfpd_raw (IncidntNum,
+							  Category,
+							  Descript,
+							  DayOfWeek,
+							  Date,
+							  Time,
+							  PdDistrict,
+							  Resolution,
+							  Address,
+							  X,
+							  Y,
+							  Location,
+							  PdId)
+		VALUES (%s)'''
+
+	db_insert(df, q_string)
+
+	# insert clean data
+	df = clean_sfpd(df)
+	q_string = '''
+		INSERT INTO sfpd (Category,
+						  Descript,
+						  PdDistrict,
+						  Address,
+						  lon,
+						  lat,
+						  datetime)
+		VALUES (%s)'''
+
+	# insert raw data
+	db_insert(df, q_string)
 
 
