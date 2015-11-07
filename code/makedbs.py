@@ -19,7 +19,8 @@ def db_insert(df, q_string):
 	for idx in df.index:
 		values = df.ix[idx].values
 		c.execute(q_string, values)
-		conn.commit()
+		if idx % 100 == 0: conn.commit();
+	conn.commit()
 	conn.close()
 
 # assessment data
@@ -72,3 +73,84 @@ def make_assessment():
 	db_insert(df, q_string)
 
 	return
+
+def getlatlon(v):
+    if type(v) == float: return 0, 0
+    s = v.split('\n')[-1]
+    if len(s) == 0: return 0, 0
+    return eval(s)
+
+def make_business():
+
+	# insert raw data
+	fn = '../data/business/Registered_Business_Locations_-_San_Francisco.csv'
+	df = pd.read_csv(fn)
+	q_string = '''
+		INSERT INTO business_raw (Location_ID,
+								  Business_Account_Number,
+								  Ownership_Name,
+								  DBA_Name,
+								  Street_Address,
+								  City,
+								  State,
+								  Zip_Code,
+								  Business_Start_Date,
+								  Business_End_Date,
+								  Location_Start_Date,
+								  Location_End_Date,
+								  Mail_Address,
+								  Mail_City_State_Zip,
+								  Class_Code,
+								  PBC_Code,
+								  Business_Location)
+		VALUES (%s)'''
+
+	# insert raw data
+	# db_insert(df, q_string)
+
+	### clean data
+
+	# drop rows where location has an end date
+	df = df[pd.isnull(df.Location_End_Date)]
+
+	major_names = {'00': 'fixed place of business',
+	               '01': 'agent, broker',
+	               '02': 'construction',
+	               '03': 'hotel',
+	               '04': 'laundry',
+	               '05': 'credit',
+	               '06': 'equipment rental',
+	               '07': 'mining, entertainment, medical',
+	               '08': 'clothing, furniture, auto, insurance',
+	               '09': 'warehouse',
+	               '10': 'utility',
+	               '11': 'taxi',
+	               '12': 'trucking',
+	               '13': 'industrial supply',
+	               '15': 'arcitectural',
+	               '16': 'garage',
+	               '18': 'firearms',
+	               'n.a.': 'n.a.'}
+	df['major_class'] = df['Class Code'].replace(major_names)
+	df['minor_class'] = 0
+
+
+	df['lat'] = df.Business_Location.apply(lambda x: getlatlon(x)[0])
+	df['lon'] = df.Business_Location.apply(lambda x: getlatlon(x)[1])
+
+	df = df[df.lat != 0] # ~5000
+
+	df.drop(['Location_ID',
+         'Business_Account_Number',
+         'Mail_Address',
+         'Mail_City_State_Zip',
+         'Business_Start_Date',
+         'Business_End_Date',
+         'Location Start Date',
+         'Location_End_Date',
+         'Class Code',
+         'PBC Code',
+         'Business_Location'], axis = 1, inplace=True)
+
+	return df
+
