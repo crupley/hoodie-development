@@ -80,11 +80,15 @@ def getlatlon(v):
     if len(s) == 0: return 0, 0
     return eval(s)
 
+def load_business():
+	fn = '../data/business/Registered_Business_Locations_-_San_Francisco.csv'
+	df = pd.read_csv(fn)
+	return df
+
 def make_business():
 
 	# insert raw data
-	fn = '../data/business/Registered_Business_Locations_-_San_Francisco.csv'
-	df = pd.read_csv(fn)
+	df = load_business()
 	q_string = '''
 		INSERT INTO business_raw (Location_ID,
 								  Business_Account_Number,
@@ -110,6 +114,31 @@ def make_business():
 
 	### clean data
 
+	df = clean_business(df)
+
+	q_string = '''
+	INSERT INTO business (Ownership_Name,
+						  DBA_Name,
+						  Street_Address,
+						  City,
+						  State,
+						  Zip_Code,
+						  major_class,
+						  minor_class,
+						  lat,
+						  lon)
+	VALUES (%s)'''
+
+	# insert raw data
+	db_insert(df, q_string)
+
+
+
+	return
+
+def clean_business(df):
+	### clean data
+	pdb.set_trace()
 	# drop rows where location has an end date
 	df = df[pd.isnull(df.Location_End_Date)]
 
@@ -138,8 +167,10 @@ def make_business():
 	df['lat'] = df.Business_Location.apply(lambda x: getlatlon(x)[0])
 	df['lon'] = df.Business_Location.apply(lambda x: getlatlon(x)[1])
 
+	# drop rows with missing lat/lon
 	df = df[df.lat != 0] # ~5000
 
+	# drop unused rows
 	df.drop(['Location_ID',
          'Business_Account_Number',
          'Mail_Address',
@@ -152,23 +183,6 @@ def make_business():
          'PBC Code',
          'Business_Location'], axis = 1, inplace=True)
 
-	q_string = '''
-	INSERT INTO business (Ownership_Name,
-						  DBA_Name,
-						  Street_Address,
-						  City,
-						  State,
-						  Zip_Code,
-						  major_class,
-						  minor_class,
-						  lat,
-						  lon)
-	VALUES (%s)'''
+	return df
 
-	# insert raw data
-	db_insert(df, q_string)
-
-
-
-	return
 
