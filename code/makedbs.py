@@ -269,4 +269,25 @@ def make_sfpd():
 	# insert raw data
 	db_insert(df, q_string)
 
+### US Census Data
 
+def splitgeo(geo):
+    s = geo.split(',')
+    block = s[0].split(' ')[-1]
+    blockgroup = s[1].split(' ')[-1]
+    tract = s[2].split(' ')[-1]
+    return block, blockgroup, tract
+
+def clean_usc_age_gender(df):
+	df['geovalues'] = df.Geography.apply(splitgeo)
+	cols = ['Block', 'Block_Group', 'Tract']
+	for n, col in enumerate(cols[::-1]):
+		df.insert(0, col, df.geovalues.apply(lambda x: x[n]))
+
+
+	df.drop(['Id',
+			 'Id2',
+			 'Geography',
+			 'geovalues'], axis = 1, inplace = True)
+
+	return df
