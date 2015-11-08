@@ -1,25 +1,51 @@
+import numpy as np
+import pandas as pd
 
-import pymongo
-from pymongo import MongoClient
+import psycopg2
 import requests
 
-from wsapi import WSAPI
 
+def scrape_walkscore(lat, lon):
+	with open('/Users/crupley/.api/walkscore.txt') as f:
+	    wskey = f.readline().strip()
 
-apikey = WSAPI
-lat = 37.7700103
-lon = -122.4535951
+	requrl = 'http://api.walkscore.com/score'
+	payload = {'wsapikey': wskey,
+			   'lat': lat,
+			   'lon': lon,
+			   'format': 'json'}
 
-requrl = 'http://api.walkscore.com/score'
-payload = {'wsapikey':apikey,
-		   'lat': lat,
-		   'lon': lon,
-		   'format': 'json'}
+	response = requests.get(requrl, params = payload)
 
-response = requests.get(requrl, params = payload)
+	data = pd.Series(response.json())
+	data['searched_lat'] = lat
+	data['searched_lon'] = lon
 
-client = MongoClient()
-# Initiate Database
-db = client['hood']
-# Initiate Table
-table = db['ws']
+	ncols = data.shape[0]
+	q_string = 	'''
+		INSERT INTO walkscore_raw (description,
+								   help_link,
+								   logo_url,
+								   more_info_icon,
+								   more_info_link,
+								   snapped_lat,
+								   snapped_lon,
+								   status,
+								   updated,
+								   walkscore,
+								   ws_link,
+								   searched_lat,
+								   searched_lon)
+			VALUES (%s)''' % ('%s, ' * (ncols - 1) + '%s')
+
+	conn = psycopg2.connect(dbname='hoodie', user='postgres', host='/tmp')
+	c = conn.cursor()
+
+	c.execute(q_string, data.values)
+
+	conn.commit()
+	conn.close()
+
+def scrape_greatschools():
+	with open('/Users/crupley/.api/greawtschools.txt') as f:
+	    gskey = f.readline().strip()

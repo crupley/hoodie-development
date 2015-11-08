@@ -22,7 +22,8 @@ def make_geo_grid(start, nsrange, ewrange):
 
 
 
-	return np.vstack(latgrid.ravel(), longrid.ravel()).T
+	return np.vstack((latgrid.ravel() + startlat,
+					  longrid.ravel() + startlon)).T
 
 
 
@@ -53,4 +54,4 @@ if __name__ == '__main__':
 	stepsize = 500 #feet
 	nsrange = np.arange(-3.5*5280, 3.5*5280, stepsize)
 	ewrange = nsrange[:]
-	make_geo_grid(citycenter, nsrange, ewrange)
+	g = make_geo_grid(citycenter, nsrange, ewrange)
