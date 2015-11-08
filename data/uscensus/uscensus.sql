@@ -109,9 +109,24 @@ CREATE TABLE usc_pop (
     Total       int
 );
 
+CREATE TABLE usc_shapefile (
+    state       text,
+    county      text,
+    tract       text,
+    block       text,
+    geoid       text,
+    name        text,
+    mtfcc       text,
+    land_area   int,
+    water_area  int,
+    lat         float,
+    lon         float
+);
+
 ALTER TABLE usc_age_gender OWNER TO postgres;
 ALTER TABLE usc_household OWNER TO postgres;
 ALTER TABLE usc_pop OWNER TO postgres;
+ALTER TABLE usc_shapefile OWNER TO postgres;
 
 
 

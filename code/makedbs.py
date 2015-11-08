@@ -7,6 +7,8 @@ import psycopg2
 from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
 
+from code.shapefiles import sf_to_df
+
 
 def db_insert(df, q_string):
 	# insert raw data into db
@@ -461,6 +463,32 @@ def make_usc_pop():
 
 	db_insert(df, q_string)
 
+
+def load_usc_shapefile():
+	fn = 'data/uscensus/tl_2010_06075_tabblock10/tl_2010_06075_tabblock10.dbf'
+	rdf = sf_to_df(fn)
+	return rdf
+
+
+def make_usc_shapefile():
+	df = load_usc_shapefile()
+	q_string = '''
+		INSERT INTO usc_shapefile (state,
+								   county,
+								   tract,
+								   block,
+								   geoid,
+								   name,
+								   mtfcc,
+								   land_area,
+								   water_area,
+								   lat,
+								   lon)
+		VALUES (%s)'''
+
+	db_insert(df, q_string)
+
+
 # Walkscore
 # imported in scrape.py
 
@@ -498,4 +526,5 @@ def make_walkscore():
 		VALUES (%s)'''
 
 	db_insert(df, q_string)
+
 
