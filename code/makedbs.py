@@ -278,6 +278,10 @@ def splitgeo(geo):
     tract = s[2].split(' ')[-1]
     return block, blockgroup, tract
 
+def load_usc_age_gender():
+	df = pd.read_csv('../data/uscensus/p12/DEC_10_SF1_P12.csv', skiprows=1)
+	return df
+
 def clean_usc_age_gender(df):
 	df['geovalues'] = df.Geography.apply(splitgeo)
 	cols = ['Block', 'Block_Group', 'Tract']
@@ -290,4 +294,78 @@ def clean_usc_age_gender(df):
 			 'Geography',
 			 'geovalues'], axis = 1, inplace = True)
 
+	cnames = df.columns
+	cnames = cnames.str.replace(': - ', '_')
+	cnames = cnames.str.replace('Male', 'M')
+	cnames = cnames.str.replace('Female', 'F')
+	cnames = cnames.str.replace(' to ', '_')
+	cnames = cnames.str.replace(' years', '')
+	cnames = cnames.str.replace(' and ', '_')
+	cnames = cnames.str.replace(':', '')
+	cnames = cnames.str.replace('-over', '+')
+	cnames = cnames.str.replace('Under ', 'U')
+	df.columns = cnames
+
 	return df
+
+def make_usc_age_gender():
+	df = load_usc_age_gender()
+	df = clean_usc_age_gender(df)
+	q_string = '''
+		INSERT INTO usc_age_gender (Block,
+									Block_Group,
+									Tract,
+									Total,
+									M,
+									M_U5,
+									M_5_9,
+									M_10_14,
+									M_15_17,
+									M_18_19,
+									M_20,
+									M_21,
+									M_22_24,
+									M_25_29,
+									M_30_34,
+									M_35_39,
+									M_40_44,
+									M_45_49,
+									M_50_54,
+									M_55_59,
+									M_60_61,
+									M_62_64,
+									M_65_66,
+									M_67_69,
+									M_70_74,
+									M_75_79,
+									M_80_84,
+									M_85_over,
+									F,
+									F_U5,
+									F_5_9,
+									F_10_14,
+									F_15_17,
+									F_18_19,
+									F_20,
+									F_21,
+									F_22_24,
+									F_25_29,
+									F_30_34,
+									F_35_39,
+									F_40_44,
+									F_45_49,
+									F_50_54,
+									F_55_59,
+									F_60_61,
+									F_62_64,
+									F_65_66,
+									F_67_69,
+									F_70_74,
+									F_75_79,
+									F_80_84,
+									F_85_over)
+		VALUES (%s)'''
+
+	db_insert(df, q_string)
+
+
