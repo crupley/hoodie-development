@@ -294,7 +294,7 @@ def splitgeo(geo):
     return block, blockgroup, tract
 
 def load_usc_age_gender():
-	df = pd.read_csv('../data/uscensus/p12/DEC_10_SF1_P12.csv', skiprows=1)
+	df = pd.read_csv('data/uscensus/p12/DEC_10_SF1_P12.csv', skiprows=1)
 	return df
 
 def clean_usc_age_gender(df):
@@ -305,7 +305,6 @@ def clean_usc_age_gender(df):
 
 
 	df.drop(['Id',
-			 'Id2',
 			 'Geography',
 			 'geovalues'], axis = 1, inplace = True)
 
@@ -330,6 +329,7 @@ def make_usc_age_gender():
 		INSERT INTO usc_age_gender (Block,
 									Block_Group,
 									Tract,
+									Id2,
 									Total,
 									M,
 									M_U5,
@@ -384,7 +384,7 @@ def make_usc_age_gender():
 	db_insert(df, q_string)
 
 def load_usc_household():
-	df = pd.read_csv('../data/uscensus/h13/DEC_10_SF1_H13.csv', skiprows=1)
+	df = pd.read_csv('data/uscensus/h13/DEC_10_SF1_H13.csv', skiprows=1)
 	return df
 
 def clean_usc_household(df):
@@ -395,7 +395,6 @@ def clean_usc_household(df):
 
 
 	df.drop(['Id',
-			 'Id2',
 			 'Geography',
 			 'geovalues'], axis = 1, inplace = True)
 
@@ -421,6 +420,7 @@ def make_usc_household():
 		INSERT INTO usc_household (Block,
 								   Block_Group,
 								   Tract,
+								   Id2,
 								   Total,
 								   p1,
 								   p2,
@@ -434,7 +434,7 @@ def make_usc_household():
 	db_insert(df, q_string)
 
 def load_usc_pop():
-	df = pd.read_csv('../data/uscensus/p1/DEC_10_SF1_P1.csv', skiprows=1)
+	df = pd.read_csv('data/uscensus/p1/DEC_10_SF1_P1.csv', skiprows=1)
 	return df
 
 def clean_usc_pop(df):
@@ -445,7 +445,6 @@ def clean_usc_pop(df):
 
 
 	df.drop(['Id',
-			 'Id2',
 			 'Geography',
 			 'geovalues'], axis = 1, inplace = True)
 
@@ -458,6 +457,7 @@ def make_usc_pop():
 		INSERT INTO usc_pop (Block,
 							 Block_Group,
 							 Tract,
+							 Id2,
 							 Total)
 		VALUES (%s)'''
 

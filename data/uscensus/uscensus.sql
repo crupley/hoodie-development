@@ -37,6 +37,7 @@ CREATE TABLE usc_age_gender (
     Block       float,
     Block_Group int,
     Tract       int,
+    Id2         text,
     Total       int,
     M           int,
     M_U5        int,
@@ -92,6 +93,7 @@ CREATE TABLE usc_household (
     Block       float,
     Block_Group int,
     Tract       int,
+    Id2         text,
     Total       int,
     p1          int,
     p2          int,
@@ -106,6 +108,7 @@ CREATE TABLE usc_pop (
     Block       float,
     Block_Group int,
     Tract       int,
+    Id2         text,
     Total       int
 );
 

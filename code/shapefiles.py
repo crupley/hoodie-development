@@ -28,6 +28,7 @@ def sf_to_df(filename):
 				'lon']
 	rdf.columns = colnames
 
+	rdf.geoid = rdf.geoid.astype('int')
 	rdf.land_area = rdf.land_area.astype('int')
 	rdf.water_area = rdf.water_area.astype('int')
 	rdf.lat = rdf.lat.astype('float')
