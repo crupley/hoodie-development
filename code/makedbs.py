@@ -468,6 +468,9 @@ def clean_walkscore(df):
 
 	df['walkscore'] = df.walkscore.astype('int')
 
+	# remove duplicated points
+	df.drop_duplicates(['snapped_lat', 'snapped_lon'], inplace = True)
+
 	df.drop(['help_link',
 			 'logo_url',
 			 'more_info_icon',
@@ -479,3 +482,20 @@ def clean_walkscore(df):
          	 'updated', 'searched_lat', 'searched_lon']]
 	
 	return df
+
+
+def make_walkscore():
+	df = get_db('walkscore_raw')
+	df = clean_walkscore(df)
+	q_string = '''
+		INSERT INTO walkscore (snapped_lat,
+							   snapped_lon,
+							   walkscore,
+							   description,
+							   updated,
+							   searched_lat,
+							   searched_lon)
+		VALUES (%s)'''
+
+	db_insert(df, q_string)
+

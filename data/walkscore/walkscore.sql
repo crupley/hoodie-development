@@ -49,11 +49,19 @@ CREATE TABLE walkscore_raw (
     searched_lon    float
 );
 
---CREATE TABLE walkscore ();
+CREATE TABLE walkscore (
+    snapped_lat     float,
+    snapped_lon     float,
+    walkscore       int,
+    description     text,
+    updated         timestamp,
+    searched_lat    float,
+    searched_lon    float
+);
 
 
 ALTER TABLE walkscore_raw OWNER TO postgres;
---ALTER TABLE walkscore OWNER TO postgres;
+ALTER TABLE walkscore OWNER TO postgres;
 
 
 --
