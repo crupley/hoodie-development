@@ -3,7 +3,7 @@ import numpy as np
 
 REARTH = 3959 * 5280 # miles to feet
 
-def make_geo_grid(start, nsrange, ewrange):
+def make_geo_grid(start, nsrange, ewrange, in_feet=True):
 	'''
 	Makes a grid of latitude, longitude tuples stepped according to 
 	north-south and east-west ranges.
@@ -11,6 +11,7 @@ def make_geo_grid(start, nsrange, ewrange):
 		start: (latitude, longitude) tuple of starting point; tuple of float
 		nsrange: locations of grid lines relative to start, in feet; list
 		ewrange: locations of grid lines relative to start, in feet; list
+		in_feet: are the steps in feet (True) or degrees (False); Boolean
 	RETURNS
 		array of lat,lon tuples spaced according to grid
 	'''
@@ -18,7 +19,10 @@ def make_geo_grid(start, nsrange, ewrange):
 
 	startlat, startlon = start
 	nsgrid, ewgrid = np.meshgrid(nsrange, ewrange)
-	latgrid, longrid = distance_to_angle(start, nsgrid, ewgrid)
+	if in_feet:
+		latgrid, longrid = distance_to_angle(start, nsgrid, ewgrid)
+	else:
+		latgrid, longrid = nsgrid, ewgrid
 
 
 
