@@ -59,3 +59,6 @@ def scrape_greatschools_schools():
 			   'limit': '-1'}
 
 	response = requests.get(requrl, params = payload)
+
+def schoolxml_to_df(xml_string):
+	tree = ElementTree.fromstring(xml_string)
