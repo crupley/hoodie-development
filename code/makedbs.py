@@ -419,4 +419,32 @@ def make_usc_household():
 
 	db_insert(df, q_string)
 
+def load_usc_pop():
+	df = pd.read_csv('../data/uscensus/p1/DEC_10_SF1_P1.csv', skiprows=1)
+	return df
 
+def clean_usc_pop(df):
+	df['geovalues'] = df.Geography.apply(splitgeo)
+	cols = ['Block', 'Block_Group', 'Tract']
+	for n, col in enumerate(cols[::-1]):
+		df.insert(0, col, df.geovalues.apply(lambda x: x[n]))
+
+
+	df.drop(['Id',
+			 'Id2',
+			 'Geography',
+			 'geovalues'], axis = 1, inplace = True)
+
+	return df
+
+def make_usc_pop():
+	df = load_usc_pop()
+	df = clean_usc_pop(df)
+	q_string = '''
+		INSERT INTO usc_pop (Block,
+							 Block_Group,
+							 Tract,
+							 Total)
+		VALUES (%s)'''
+
+	db_insert(df, q_string)

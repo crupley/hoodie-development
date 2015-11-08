@@ -102,11 +102,16 @@ CREATE TABLE usc_household (
     p7          int
 );
 
-
-
+CREATE TABLE usc_pop (
+    Block       float,
+    Block_Group int,
+    Tract       int,
+    Total       int
+);
 
 ALTER TABLE usc_age_gender OWNER TO postgres;
 ALTER TABLE usc_household OWNER TO postgres;
+ALTER TABLE usc_pop OWNER TO postgres;
 
 
 
