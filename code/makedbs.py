@@ -4,8 +4,8 @@ import pandas as pd
 import re
 
 import psycopg2
-
-import pdb
+from sqlalchemy import create_engine
+from sqlalchemy.engine.url import URL
 
 
 def db_insert(df, q_string):
@@ -23,6 +23,17 @@ def db_insert(df, q_string):
 		if idx % 100 == 0: conn.commit();
 	conn.commit()
 	conn.close()
+
+def get_db(table_name):
+	db = {'drivername': 'postgres',
+		  'host': 'localhost',
+		  'username': 'postgres',
+		  'database': 'hoodie'}
+	engine = create_engine(URL(**db))
+	with engine.connect() as conn, conn.begin():
+		df = pd.read_sql_table(table_name, conn)
+	return df
+
 
 # assessment data
 def make_assessment():
@@ -75,6 +86,7 @@ def make_assessment():
 
 	return
 
+### Business data
 def getlatlon(v):
 	'''
 	INPUT: formatted address, string
@@ -448,3 +460,22 @@ def make_usc_pop():
 		VALUES (%s)'''
 
 	db_insert(df, q_string)
+
+# Walkscore
+# imported in scrape.py
+
+def clean_walkscore(df):
+
+	df['walkscore'] = df.walkscore.astype('int')
+
+	df.drop(['help_link',
+			 'logo_url',
+			 'more_info_icon',
+			 'more_info_link',
+			 'status',
+			 'ws_link'], axis = 1, inplace = True)
+
+	df = df[['snapped_lat', 'snapped_lon', 'walkscore', 'description',
+         	 'updated', 'searched_lat', 'searched_lon']]
+	
+	return df
