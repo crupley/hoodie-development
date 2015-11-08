@@ -18,6 +18,10 @@ def scrape_walkscore(lat, lon):
 
 	response = requests.get(requrl, params = payload)
 
+	if response.json()['status'] != 1:
+		print 'Server response error, code:', response.json()['status']
+		return
+
 	data = pd.Series(response.json())
 	data['searched_lat'] = lat
 	data['searched_lon'] = lon
