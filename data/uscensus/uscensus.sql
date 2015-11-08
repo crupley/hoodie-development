@@ -88,10 +88,25 @@ CREATE TABLE usc_age_gender (
     F_85_over   int
 );
 
+CREATE TABLE usc_household (
+    Block       float,
+    Block_Group int,
+    Tract       int,
+    Total       int,
+    p1          int,
+    p2          int,
+    p3          int,
+    p4          int,
+    p5          int,
+    p6          int,
+    p7          int
+);
+
 
 
 
 ALTER TABLE usc_age_gender OWNER TO postgres;
+ALTER TABLE usc_household OWNER TO postgres;
 
 
 

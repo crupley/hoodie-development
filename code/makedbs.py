@@ -1,6 +1,7 @@
 # Ingest data from sources into standardized format and store in db
 import numpy as np
 import pandas as pd
+import re
 
 import psycopg2
 
@@ -364,6 +365,56 @@ def make_usc_age_gender():
 									F_75_79,
 									F_80_84,
 									F_85_over)
+		VALUES (%s)'''
+
+	db_insert(df, q_string)
+
+def load_usc_household():
+	df = pd.read_csv('../data/uscensus/h13/DEC_10_SF1_H13.csv', skiprows=1)
+	return df
+
+def clean_usc_household(df):
+	df['geovalues'] = df.Geography.apply(splitgeo)
+	cols = ['Block', 'Block_Group', 'Tract']
+	for n, col in enumerate(cols[::-1]):
+		df.insert(0, col, df.geovalues.apply(lambda x: x[n]))
+
+
+	df.drop(['Id',
+			 'Id2',
+			 'Geography',
+			 'geovalues'], axis = 1, inplace = True)
+
+	cnames = df.columns
+	cnames = cnames.str.replace('-person household', '')
+	cnames = cnames.str.replace('-or-more', '')
+	cnames = cnames.str.replace(':', '')
+
+	# prepend numeric entries
+	fnames = []
+	for name in cnames:
+	    pp = ''
+	    if re.match('[0-9]', name): pp = 'p'
+	    fnames.append(pp + name)
+	df.columns = fnames
+
+	return df
+
+def make_usc_household():
+	df = load_usc_household()
+	df = clean_usc_household(df)
+	q_string = '''
+		INSERT INTO usc_household (Block,
+								   Block_Group,
+								   Tract,
+								   Total,
+								   p1,
+								   p2,
+								   p3,
+								   p4,
+								   p5,
+								   p6,
+								   p7)
 		VALUES (%s)'''
 
 	db_insert(df, q_string)
