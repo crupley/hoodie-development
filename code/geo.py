@@ -21,13 +21,13 @@ def make_geo_grid(start, nsrange, ewrange, in_feet=True):
 	nsgrid, ewgrid = np.meshgrid(nsrange, ewrange)
 	if in_feet:
 		latgrid, longrid = distance_to_angle(start, nsgrid, ewgrid)
+		latgrid += startlat
+		longrid += startlon
 	else:
 		latgrid, longrid = nsgrid, ewgrid
 
-
-
-	return np.vstack((latgrid.ravel() + startlat,
-					  longrid.ravel() + startlon)).T
+	return np.vstack((latgrid.ravel(),
+					  longrid.ravel())).T
 
 
 
