@@ -54,6 +54,7 @@ def rad_to_deg(a):
 
 
 if __name__ == '__main__':
+	# city limits: -122.5185:-122.35454, 37.70784:37.8195
 	citycenter = (37.77, -122.454)
 	stepsize = 500 #feet
 	nsrange = np.arange(-3.5*5280, 3.5*5280, stepsize)
