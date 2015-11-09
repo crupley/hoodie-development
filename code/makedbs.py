@@ -197,7 +197,9 @@ def clean_business(df):
 				   '16': 'Non-Profit Garage Corporations',
 	               'n.a.': 'n.a.'}
 	df['major_class'] = df['class_code'].replace(major_names)
-	#df['minor_class'] = 0
+
+	df['pbc_code'] = df['pbc_code'].replace(['n.a.', 'NaN'], '8888')
+	df['pbc_code'] = df['pbc_code'].astype('int')
 
 
 	df['lat'] = df.business_location.apply(lambda x: getlatlon(x)[0])
@@ -206,7 +208,12 @@ def clean_business(df):
 	# drop rows with missing lat/lon
 	df = df[df.lat != 0] # ~5000
 
-	# drop unused rows
+	# add pbc code descriptions
+	codes = pd.read_csv('data/business/Principal_Business_Code__PBC__List.csv')
+	df = df.merge(codes, how='left',
+				  left_on='pbc_code', right_on='Business_Minor_Class')
+
+	# drop unused columns
 	df.drop(['location_id',
          'business_account_number',
          'mail_address',
@@ -215,9 +222,10 @@ def clean_business(df):
          'business_end_date',
          'location_start_date',
          'location_end_date',
-         #'Class Code',
-         #'pbc_code',
-         'business_location'], axis = 1, inplace=True)
+         'business_location',
+         'Ownership_Type',
+         'Business_Major_Class',
+         'Business_Minor_Class'], axis = 1, inplace=True)
 
 	return df
 
