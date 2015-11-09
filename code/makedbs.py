@@ -100,6 +100,7 @@ def getlatlon(v):
 
 	# check for nan
 	if type(v) == float: return 0, 0
+	if v == 'NaN': return 0, 0
 	s = v.split('\n')[-1]
 
 	# check for missing lat/lon
@@ -176,7 +177,7 @@ def clean_business(df):
 	### clean data
 
 	# drop rows where location has an end date
-	df = df[pd.isnull(df.Location_End_Date)]
+	df = df[df.location_end_date == 'NaN']
 
 	major_names = {'00': 'Fixed Place of Business',
 				   '01': 'Commission Merchant or Broker (non-durable goods)',
@@ -195,28 +196,28 @@ def clean_business(df):
 				   '15': 'Architectural and Engingeering Services',
 				   '16': 'Non-Profit Garage Corporations',
 	               'n.a.': 'n.a.'}
-	df['major_class'] = df['Class Code'].replace(major_names)
-	df['minor_class'] = 0
+	df['major_class'] = df['class_code'].replace(major_names)
+	#df['minor_class'] = 0
 
 
-	df['lat'] = df.Business_Location.apply(lambda x: getlatlon(x)[0])
-	df['lon'] = df.Business_Location.apply(lambda x: getlatlon(x)[1])
+	df['lat'] = df.business_location.apply(lambda x: getlatlon(x)[0])
+	df['lon'] = df.business_location.apply(lambda x: getlatlon(x)[1])
 
 	# drop rows with missing lat/lon
 	df = df[df.lat != 0] # ~5000
 
 	# drop unused rows
-	df.drop(['Location_ID',
-         'Business_Account_Number',
-         'Mail_Address',
-         'Mail_City_State_Zip',
-         'Business_Start_Date',
-         'Business_End_Date',
-         'Location Start Date',
-         'Location_End_Date',
-         'Class Code',
-         'PBC Code',
-         'Business_Location'], axis = 1, inplace=True)
+	df.drop(['location_id',
+         'business_account_number',
+         'mail_address',
+         'mail_city_state_zip',
+         'business_start_date',
+         'business_end_date',
+         'location_start_date',
+         'location_end_date',
+         #'Class Code',
+         #'pbc_code',
+         'business_location'], axis = 1, inplace=True)
 
 	return df
 
