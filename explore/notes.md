@@ -107,3 +107,7 @@
 ###Ref
 
 [spatial cluster analysis](https://books.google.com/books?hl=en&lr=&id=4iqX4926x40C&oi=fnd&pg=PA395&dq=geographic+cluster+boundaries&ots=XHZIU6vDXB&sig=r-e74fc7v0jVtuNcz_gb5_xfB7k#v=onepage&q=geographic%20cluster%20boundaries&f=false) - google books
+
+## Database
+
+* export postgres: `pg_dump DBNAME > dbexport.pgsql`
