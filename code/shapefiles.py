@@ -6,7 +6,12 @@ import code.pyshp.shapefile as shapefile
 
 def sf_to_df(filename):
 	'''
-	converts shapefile records to dataframe
+	INPUT
+		filename: string
+	OUTPUT
+		shapefile records; pandas DataFrame
+
+	Converts shapefile records from US Census 2010 to dataframe.
 	'''
 	sf = shapefile.Reader(filename)
 	records = np.array(sf.records())
