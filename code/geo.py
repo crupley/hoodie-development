@@ -1,3 +1,4 @@
+# Helper functions for working with geographic data
 
 import numpy as np
 
@@ -16,7 +17,6 @@ def make_geo_grid(start, nsrange, ewrange, in_feet=True):
 		array of lat,lon tuples spaced according to grid
 	'''
 
-
 	startlat, startlon = start
 	nsgrid, ewgrid = np.meshgrid(nsrange, ewrange)
 	if in_feet:
@@ -33,7 +33,14 @@ def make_geo_grid(start, nsrange, ewrange, in_feet=True):
 
 def distance_to_angle(start, ns, ew):
 	'''
-	convert distance along surface of earth to lat/lon change
+	INPUT
+		start: starting coordinate as a lat, lon tuple; tuple
+		ns: distance moved in the north-south direction in feet; float
+		ew: distance move in the east-west direction in feet; float
+	OUTPUT
+		dlat, dlon: change in latitude, longitude; floats
+	
+	Convert distance along surface of earth to lat/lon change
 	'''
 
 	lat, lon = start
