@@ -195,7 +195,8 @@ def clean_business(df):
 				   '13': 'Wholesale Sales',
 				   '15': 'Architectural and Engingeering Services',
 				   '16': 'Non-Profit Garage Corporations',
-	               'n.a.': 'n.a.'}
+	               'n.a.': 'n.a.',
+	               'NaN': 'n.a.'}
 	df['major_class'] = df['class_code'].replace(major_names)
 
 	df['pbc_code'] = df['pbc_code'].replace(['n.a.', 'NaN'], '8888')
@@ -210,8 +211,12 @@ def clean_business(df):
 
 	# add pbc code descriptions
 	codes = pd.read_csv('data/business/Principal_Business_Code__PBC__List.csv')
-	df = df.merge(codes, how='left',
-				  left_on='pbc_code', right_on='Business_Minor_Class')
+	codes.set_index('Business_Minor_Class')
+	df['minor_class'] = df['pbc_code'].replace(codes.Description)
+	# df = df.merge(codes, how='left', left_on='pbc_code', right_on='Business_Minor_Class')
+
+	# add category column
+	df['category'] = '0'
 
 	# drop unused columns
 	df.drop(['location_id',
@@ -222,10 +227,8 @@ def clean_business(df):
          'business_end_date',
          'location_start_date',
          'location_end_date',
-         'business_location',
-         'Ownership_Type',
-         'Business_Major_Class',
-         'Business_Minor_Class'], axis = 1, inplace=True)
+         'business_location'],
+         axis = 1, inplace=True)
 
 	return df
 
