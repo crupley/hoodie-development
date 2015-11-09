@@ -1,0 +1,22 @@
+KEY: Ownership Type: 
+	S Sole Proprietors, Independent Contractors, 1-Member LLCs
+	P Partnerships
+	C Corporations and Limited Liability Entities
+
+Business Class
+	00 Fixed Place of Business
+	01 Commission Merchant or Broker (non-durable goods)
+	02 General Contractors & Operative Builders
+	03 Hotels, Apartments
+	04 Coin-Operated Laundries, Dry Cleaning
+	05 Credit Agencies, Lending Institutions
+	06 Personal Property/Equipment Rental & Leasing
+	07 Other Business Services
+	08 Retail Sales
+	09 Public Warehousing/Transportation/Storage/Freight Forwarding
+	10 Communication Services; Utilities (Gas/Electric/Steam/Railroad)
+	11 Transporting Persons for Hire
+	12 Trucking/Hauling
+	13 Wholesale Sales
+	15 Architectural and Engingeering Services
+	16 Non-Profit Garage Corporations
