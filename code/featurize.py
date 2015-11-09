@@ -21,7 +21,7 @@ def make_plotmesh(x, y, z):
     
     return xi, yi, zi
 
-def cut_df(df, latbins, lonbins, how='mean'):
+def cut_df(df, how='mean'):
 	'''
 	df with df.lat and df.lon
 	Window df down to lat/lon range
@@ -36,4 +36,4 @@ def cut_df(df, latbins, lonbins, how='mean'):
 	df['lon_cut'] = pd.cut(df.lon, lonbins, labels=lonbins[1:])
 	df['lat_cut'] = pd.cut(df.lat, latbins, labels=latbins[1:])
 
-	return cutdf
+	return df
