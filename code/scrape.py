@@ -7,6 +7,15 @@ from xml.etree import ElementTree
 
 
 def scrape_walkscore(lat, lon):
+	'''
+	INPUT
+		lat, lon: latitude and longitude; float
+	OUTPUT
+		stores results in postgres database
+
+	API query to walkscore.com for walkscore data nearest to a particular
+	latitude and longitude. Walkscore snaps to a grid with 500 ft. spacing.
+	'''
 	with open('/Users/crupley/.api/walkscore.txt') as f:
 	    wskey = f.readline().strip()
 
