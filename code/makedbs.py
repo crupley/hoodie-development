@@ -211,12 +211,43 @@ def clean_business(df):
 
 	# add pbc code descriptions
 	codes = pd.read_csv('data/business/Principal_Business_Code__PBC__List.csv')
-	codes.set_index('Business_Minor_Class')
+	codes.set_index('Business_Minor_Class', inplace = True)
 	df['minor_class'] = df['pbc_code'].replace(codes.Description)
 	# df = df.merge(codes, how='left', left_on='pbc_code', right_on='Business_Minor_Class')
 
 	# add category column
 	df['category'] = '0'
+	df.category.loc[df.class_code == '04'] = 'laundry'
+	for cl in ['n.a.', '00', '01', '02', '03', '05', '06', '09',
+			   '10', '11', '12', '13', '15', '16']:
+		df.category.loc[df.class_code == cl] = 'other'
+
+	keywords = [('BUSINESS SERVICES', 'other'),
+				('DRINKING PLACES', 'bars'),
+				('RESTAURANT', 'restaurant'),
+				('GROCERY', 'grocery'),
+				('FOOD', 'grocery'),
+				('MARKET', 'grocery'),
+				('MEDICAL', 'medical'),
+				('OFFICE', 'medical'),
+				('HOSPITAL', 'medical'),
+				('HEALTH', 'medical'),
+				('RETAIL', 'retail'),
+				('APPAREL', 'retail'),
+				('GIFT', 'retail'),
+				('JEWELRY', 'retail'),
+				('THEATER', 'entertainment'),
+				('BARBER', 'personal_care'),
+				('BEAUTY', 'personal_care'),
+				('HOTEL', 'hotel'),
+				('PARKING', 'parking')]
+
+	for key, value in keywords:
+		df.category[df.minor_class.str.contains(key, na=False)] = value
+	df.category[df.category == '0'] = 'other'
+
+
+
 
 	# drop unused columns
 	df.drop(['location_id',
