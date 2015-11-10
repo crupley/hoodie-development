@@ -2,6 +2,8 @@
 import numpy as np
 import pandas as pd
 import sys
+from itertools import combinations
+from time import time
 
 import scipy.interpolate
 
@@ -149,14 +151,37 @@ def make_feature_df(dblist, norm_to_pop=True, merge_type='inner',
 
 	return df
 
+def feature_permutations(levels):
+	'''
+	levels: list of length items to permute
+	'''
 
+	allfeatures = ['assessment', 'business', 'sfpd', 
+               'usc_age_gender', 'usc_household',
+               'usc_pop', 'walkscore']
 
+	res = pd.DataFrame(columns = ('n', 'nodes', 'time', 'features'))
+	for n in levels:
+		print ''
+		print n, 'length combinations'
+		for db in combinations(allfeatures, n):
+		    start_time = time()
+		    dblist = list(db)
+		    df = make_feature_df(dblist, norm_to_pop = False, verbose=False)
+		    etime = time() - start_time
+		    print n, df.shape[0], round(etime,1), dblist
+		    d = {'n': n, 
+		     'nodes': df.shape[0],
+		     'features': dblist,
+		     'time': etime}
+		    res = res.append(d, ignore_index=True)
+	return res
+	# pickle.load(open('data/bin_overlap.pkl', 'rb'))	
 
-
-
-
-
-
+if __name__ == '__main__':
+	res = feature_permutations()
+	pickle.dump(res, open('data/bin_overlap.pkl', 'wb'))
+	# pickle.load(open('data/bin_overlap.pkl', 'rb'))
 
 
 
