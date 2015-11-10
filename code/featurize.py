@@ -14,8 +14,8 @@ latmax = 37.8195
 lonmin = -122.5185
 lonmax = -122.35454
 
-latbins = np.linspace(latmin, latmax, 100)
-lonbins = np.linspace(lonmin, lonmax, 100)
+latbins = np.linspace(latmin, latmax, 101)
+lonbins = np.linspace(lonmin, lonmax, 101)
 
 def make_plotmesh(x, y, z):
     xi, yi = np.meshgrid(x, y)
@@ -144,6 +144,7 @@ def make_feature_df(dblist):
 	for col in scalecols:
 		if col in df.columns:
 			df[col] = (df[col] / df['pop']).replace(np.inf, np.nan).fillna(0)
+			#pass
 
 	return df
 
