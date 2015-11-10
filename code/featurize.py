@@ -46,8 +46,18 @@ def make_feature_df(dblist):
 
 	for db in dblist:
 		print 'loading ', db
+		print ''
 		df1 = get_db(db)
+
+		# merge in lat/lon for census data from shapefile
+		if db == 'usc_age_gender':
+			df2 = get_db('usc_shapefile')
+			df1 = df1.merge(df2, left_on = 'id2', right_on = 'geoid')
+
+
+
 		df1 = cut_df(df1)
+
 		if db == 'assessment':
 			#df1 = get_db(db)
 			#df1 = cut_df(df1)
@@ -74,6 +84,11 @@ def make_feature_df(dblist):
 			df1 = df1.groupby(['lat_cut', 'lon_cut']).count()
 			df1 = df1.dropna().reset_index()
 			df1 = df1[['lat_cut', 'lon_cut', 'count']]
+		elif db == 'usc_age_gender':
+			df1 = df1.groupby(['lat_cut', 'lon_cut']).sum()
+			df1 = df1.dropna().reset_index()
+			df1['sgnf'] = (2 * df1.f / df1.total).fillna(0)
+			df1 = df1[['lat_cut', 'lon_cut', 'sgnf']]
 
 
 
