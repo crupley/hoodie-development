@@ -45,6 +45,12 @@ def cut_df(df):
 
 	return df
 
+def bin_interpolate(datax, datay, dataz, interpx, interpy):
+	rbf = scipy.interpolate.Rbf(datax, datay, dataz, function='linear')
+	interpz = rbf(interpx, interpy)
+	return interpz
+
+
 def make_feature_df(dblist, norm_to_pop=True, merge_type='inner',
 					verbose=False):
 	'''
@@ -178,7 +184,9 @@ def feature_permutations(levels):
 		     'time': etime}
 		    res = res.append(d, ignore_index=True)
 	return res
-	# pickle.load(open('data/bin_overlap.pkl', 'rb'))	
+	# pickle.load(open('data/bin_overlap.pkl', 'rb'))
+
+
 
 if __name__ == '__main__':
 	res = feature_permutations()
