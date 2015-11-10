@@ -54,6 +54,11 @@ def make_feature_df(dblist):
 		feature matrix, pandas DataFrame
 	'''
 
+	# population will be added if in list or not
+	if 'usc_pop' in dblist:
+		dblist.remove('usc_pop')
+	dblist = ['usc_pop'] + dblist
+
 	df = pd.DataFrame()
 
 	for db in dblist:
@@ -133,6 +138,13 @@ def make_feature_df(dblist):
 		else:
 			df = df.merge(df1, on=['lat_cut', 'lon_cut'],
 						  how='outer').fillna(0)
+	
+	# scale select columns by population
+	scalecols = ['grocery', 'restaurant', 'retail', 'ncrimes']
+	for col in scalecols:
+		if col in df.columns:
+			df[col] = (df[col] / df['pop']).replace(np.inf, np.nan).fillna(0)
+
 	return df
 
 
