@@ -41,6 +41,15 @@ def cut_df(df, how='mean'):
 	return df
 
 def make_feature_df(dblist):
+	'''
+	INPUT
+		dblist: names of database tables, list of strings
+		must be in ['assessment', 'business', 'sfpd', 
+					'usc_age_gender', 'usc_household',
+					'usc_pop', 'walkscore']
+	OUTPUT
+		feature matrix, pandas DataFrame
+	'''
 
 	df = pd.DataFrame()
 
