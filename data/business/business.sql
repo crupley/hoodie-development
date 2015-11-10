@@ -55,16 +55,19 @@ CREATE TABLE business_raw (
 );
 
 CREATE TABLE business (
-    Ownership_Name          text,
-    DBA_Name                text,
-    Street_Address          text,
-    City                    text,
-    State                   text,
-    Zip_Code                float,
-    major_class             text,
-    minor_class             int,
+    ownership_name          text,
+    dba_name                text,
+    street_address          text,
+    city                    text,
+    state                   text,
+    zip_code                float,
+    class_code              text,
+    pbc_code                int,
     lat                     float,
-    lon                     float
+    lon                     float,
+    major_class             text,
+    minor_class             text,
+    category                text
 );
 
 

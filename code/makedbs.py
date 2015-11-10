@@ -115,7 +115,7 @@ def load_business():
 	OUTPUT: business data, DataFrame
 	Function to load the business dataset and return it in a dataframe
 	'''
-	fn = '../data/business/Registered_Business_Locations_-_San_Francisco.csv'
+	fn = 'data/business/Registered_Business_Locations_-_San_Francisco.csv'
 	df = pd.read_csv(fn)
 	return df
 
@@ -150,23 +150,27 @@ def make_business():
 		VALUES (%s)'''
 
 	# insert raw data
-	db_insert(df, q_string)
+	# db_insert(df, q_string)
 
 	### clean data
 
+	df = get_db('business_raw')
 	df = clean_business(df)
 
 	q_string = '''
-	INSERT INTO business (Ownership_Name,
-						  DBA_Name,
-						  Street_Address,
-						  City,
-						  State,
-						  Zip_Code,
+	INSERT INTO business (ownership_name,
+						  dba_name,
+						  street_address,
+						  city,
+						  state,
+						  zip_code,
+						  class_code,
+						  pbc_code,
+						  lat,
+						  lon,
 						  major_class,
 						  minor_class,
-						  lat,
-						  lon)
+						  category)
 	VALUES (%s)'''
 
 	# insert raw data
@@ -176,8 +180,13 @@ def make_business():
 def clean_business(df):
 	### clean data
 
+	df.columns = map(lambda x: x.lower().replace(' ', '_'), df.columns)
+
 	# drop rows where location has an end date
 	df = df[df.location_end_date == 'NaN']
+
+	df['lat'] = df.business_location.apply(lambda x: getlatlon(x)[0])
+	df['lon'] = df.business_location.apply(lambda x: getlatlon(x)[1])
 
 	major_names = {'00': 'Fixed Place of Business',
 				   '01': 'Commission Merchant or Broker (non-durable goods)',
@@ -203,8 +212,7 @@ def clean_business(df):
 	df['pbc_code'] = df['pbc_code'].astype('int')
 
 
-	df['lat'] = df.business_location.apply(lambda x: getlatlon(x)[0])
-	df['lon'] = df.business_location.apply(lambda x: getlatlon(x)[1])
+
 
 	# drop rows with missing lat/lon
 	df = df[df.lat != 0] # ~5000
