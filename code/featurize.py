@@ -149,6 +149,8 @@ def make_feature_df(dblist, norm_to_pop=True, merge_type='inner',
 			if col in df.columns:
 				df[col] = (df[col]/df['pop']).replace(np.inf,np.nan).fillna(0)
 
+	if verbose: print 'Complete'
+
 	return df
 
 def feature_permutations(levels):
@@ -181,6 +183,7 @@ def feature_permutations(levels):
 if __name__ == '__main__':
 	res = feature_permutations()
 	pickle.dump(res, open('data/bin_overlap.pkl', 'wb'))
+	print 'Total elapsed time: ', res.time.sum()
 	# pickle.load(open('data/bin_overlap.pkl', 'rb'))
 
 
