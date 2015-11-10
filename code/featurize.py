@@ -97,7 +97,7 @@ def make_feature_df(dblist):
 		elif db == 'usc_age_gender':
 			df1 = df1.groupby(['lat_cut', 'lon_cut']).sum()
 			df1 = df1.dropna().reset_index()
-			df1['sgnf'] = (2 * df1.f / df1.total).fillna(0)
+			df1['sgnf'] = (2 * df1.f / df1.total).fillna(0) - 1
 			df1 = df1[['lat_cut', 'lon_cut', 'sgnf']]
 
 		elif db == 'usc_household':
