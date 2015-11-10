@@ -54,6 +54,7 @@ def make_feature_df(dblist, norm_to_pop=True, merge_type='inner',
 	OUTPUT
 		feature matrix, pandas DataFrame
 	'''
+	dblist = dblist[:]
 	if norm_to_pop:
 		# population will be added if in list or not
 		if 'usc_pop' in dblist:
