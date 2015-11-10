@@ -558,6 +558,8 @@ def clean_walkscore(df):
 
 	df = df[['snapped_lat', 'snapped_lon', 'walkscore', 'description',
          	 'updated', 'searched_lat', 'searched_lon']]
+	df.columns = ['lat', 'lon', 'walkscore', 'description',
+         	 	  'updated', 'searched_lat', 'searched_lon']
 	
 	return df
 
@@ -566,8 +568,8 @@ def make_walkscore():
 	df = get_db('walkscore_raw')
 	df = clean_walkscore(df)
 	q_string = '''
-		INSERT INTO walkscore (snapped_lat,
-							   snapped_lon,
+		INSERT INTO walkscore (lat,
+							   lon,
 							   walkscore,
 							   description,
 							   updated,

@@ -50,8 +50,8 @@ CREATE TABLE walkscore_raw (
 );
 
 CREATE TABLE walkscore (
-    snapped_lat     float,
-    snapped_lon     float,
+    lat             float,
+    lon             float,
     walkscore       int,
     description     text,
     updated         timestamp,
