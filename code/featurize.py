@@ -14,8 +14,8 @@ latmax = 37.8195
 lonmin = -122.5185
 lonmax = -122.35454
 
-latbins = np.linspace(latmin, latmax, 101)
-lonbins = np.linspace(lonmin, lonmax, 101)
+latbins = np.linspace(latmin, latmax, 301)
+lonbins = np.linspace(lonmin, lonmax, 301)
 
 def make_plotmesh(x, y, z):
     xi, yi = np.meshgrid(x, y)
@@ -137,7 +137,7 @@ def make_feature_df(dblist):
 			df = df1.copy()
 		else:
 			df = df.merge(df1, on=['lat_cut', 'lon_cut'],
-						  how='outer').fillna(0)
+						  how='inner').fillna(0)
 	
 	# scale select columns by population
 	scalecols = ['grocery', 'restaurant', 'retail', 'ncrimes']
