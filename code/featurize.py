@@ -113,6 +113,13 @@ def make_feature_df(dblist):
 			df1.fillna(0, inplace = True)
 
 			df1 = df1[['lat_cut', 'lon_cut', 'avg_hh_size']]
+		elif db == 'usc_pop':
+			df1 = df1.groupby(['lat_cut', 'lon_cut']).sum()
+			df1 = df1.dropna().reset_index()
+			df1 = df1[['lat_cut', 'lon_cut', 'total']]
+			df1.columns = ['lat_cut', 'lon_cut', 'pop']
+
+
 
 
 
