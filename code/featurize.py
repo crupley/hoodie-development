@@ -43,27 +43,27 @@ def cut_df(df):
 
 	return df
 
-def make_feature_df(dblist):
+def make_feature_df(dblist, norm_to_pop=True, merge_type='inner',
+					verbose=False):
 	'''
 	INPUT
 		dblist: names of database tables, list of strings
-		must be in ['assessment', 'business', 'sfpd', 
-					'usc_age_gender', 'usc_household',
-					'usc_pop', 'walkscore']
+			must be in ['assessment', 'business', 'sfpd', 
+						'usc_age_gender', 'usc_household',
+						'usc_pop', 'walkscore']
 	OUTPUT
 		feature matrix, pandas DataFrame
 	'''
-
-	# population will be added if in list or not
-	if 'usc_pop' in dblist:
-		dblist.remove('usc_pop')
-	dblist = ['usc_pop'] + dblist
+	if norm_to_pop:
+		# population will be added if in list or not
+		if 'usc_pop' in dblist:
+			dblist.remove('usc_pop')
+		dblist = ['usc_pop'] + dblist
 
 	df = pd.DataFrame()
 
 	for db in dblist:
-		print 'loading ', db
-		sys.stdout.flush()
+		if verbose: print 'loading ', db; sys.stdout.flush()
 
 		# load database table
 		df1 = get_db(db)
@@ -137,14 +137,14 @@ def make_feature_df(dblist):
 			df = df1.copy()
 		else:
 			df = df.merge(df1, on=['lat_cut', 'lon_cut'],
-						  how='outer').fillna(0)
+						  how=merge_type).fillna(0)
 	
-	# scale select columns by population
-	scalecols = ['grocery', 'restaurant', 'retail', 'ncrimes']
-	for col in scalecols:
-		if col in df.columns:
-			df[col] = (df[col] / df['pop']).replace(np.inf, np.nan).fillna(0)
-			#pass
+	if norm_to_pop:
+		# scale select columns by population
+		scalecols = ['grocery', 'restaurant', 'retail', 'ncrimes']
+		for col in scalecols:
+			if col in df.columns:
+				df[col] = (df[col]/df['pop']).replace(np.inf,np.nan).fillna(0)
 
 	return df
 
