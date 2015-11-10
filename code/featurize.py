@@ -50,7 +50,7 @@ def make_feature_df(dblist):
 		df1 = get_db(db)
 
 		# merge in lat/lon for census data from shapefile
-		if db == 'usc_age_gender':
+		if db in ['usc_age_gender', 'usc_household', 'usc_pop']:
 			df2 = get_db('usc_shapefile')
 			df1 = df1.merge(df2, left_on = 'id2', right_on = 'geoid')
 
@@ -89,6 +89,25 @@ def make_feature_df(dblist):
 			df1 = df1.dropna().reset_index()
 			df1['sgnf'] = (2 * df1.f / df1.total).fillna(0)
 			df1 = df1[['lat_cut', 'lon_cut', 'sgnf']]
+		elif db == 'usc_household':
+			df1 = df1.groupby(['lat_cut', 'lon_cut']).sum()
+			df1 = df1.dropna().reset_index()
+
+			# calc average household size
+			total_p = 0
+			p_range = range(1,8)
+			for i in p_range:
+				col = 'p' + str(i)
+				total_p += df1[col] * i
+			av_p = total_p / df1.total
+			df1['avg_hh_size'] = av_p
+			df1.fillna(0, inplace = True)
+
+			df1 = df1[['lat_cut', 'lon_cut', 'avg_hh_size']]
+
+
+
+
 
 
 
