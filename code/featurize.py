@@ -8,15 +8,6 @@ import scipy.interpolate
 
 from code.makedbs import get_db
 
-# constants
-latmin = 37.70784
-latmax = 37.8195
-lonmin = -122.5185
-lonmax = -122.35454
-
-latbins = np.linspace(latmin, latmax, 101)
-lonbins = np.linspace(lonmin, lonmax, 101)
-
 def bin_interpolate(datax, datay, dataz, interpx, interpy):
 	rbf = scipy.interpolate.Rbf(datax, datay, dataz, function='linear')
 	interpz = rbf(interpx, interpy)
