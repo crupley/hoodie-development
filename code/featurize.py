@@ -24,8 +24,6 @@ class featurizer():
 		self.lonmin = -122.5185
 		self.lonmax = -122.35454
 
-
-
 		self.latbins = np.linspace(self.latmin, self.latmax, 101)
 		self.lonbins = np.linspace(self.lonmin, self.lonmax, 101)
 
