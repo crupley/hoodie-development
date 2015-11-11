@@ -21,24 +21,6 @@ lonmax = -122.35454
 latbins = np.linspace(latmin, latmax, 101)
 lonbins = np.linspace(lonmin, lonmax, 101)
 
-def cut_df(df):
-	'''
-	INPUT
-		df: dataframe with lat and lon columns, pandas DataFrame
-	OUTPUT
-		dataframe windowed to desired range with lat/lon bins added
-	'''
-
-	df = df[df.lat > latmin]
-	df = df[df.lat < latmax]
-	df = df[df.lon > lonmin]
-	df = df[df.lon < lonmax]
-
-	df['lat_cut'] = pd.cut(df.lat, latbins, labels=latbins[1:])
-	df['lon_cut'] = pd.cut(df.lon, lonbins, labels=lonbins[1:])
-
-	return df
-
 def bin_interpolate(datax, datay, dataz, interpx, interpy):
 	rbf = scipy.interpolate.Rbf(datax, datay, dataz, function='linear')
 	interpz = rbf(interpx, interpy)
