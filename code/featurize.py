@@ -199,19 +199,22 @@ class featurizer():
 		self.lonmin = -122.5185
 		self.lonmax = -122.35454
 
-		self.nodelat = np.linspace(self.latmin, self.latmax, 101)
-		self.nodelon = np.linspace(self.lonmin, self.lonmax, 101)
+
 
 		self.latbins = np.linspace(self.latmin, self.latmax, 101)
 		self.lonbins = np.linspace(self.lonmin, self.lonmax, 101)
 
 		self.shapefile = self.window(get_db('usc_shapefile'))
 
+		self.nodelat = self.shapefile.lat
+		self.nodelon = self.shapefile.lon
+
 	def window(self, df):
 		df = df[df.lat > self.latmin]
 		df = df[df.lat < self.latmax]
 		df = df[df.lon > self.lonmin]
 		df = df[df.lon < self.lonmax]
+		df = df.reset_index()
 		return df
 
 	def binlatlon(self, df):
@@ -232,11 +235,20 @@ class featurizer():
 		self.latbins = np.linspace(latmin, latmax, npoints)
 		self.lonbins = np.linspace(lonmin, lonmax, npoints)
 
+	def plot(self, featurelist):
+		nplots = len(featurelist)
+		plt.figure(figsize = (16, 16*nplots))
+		for i in xrange(1, nplots + 1):
+			plt.subplot(nplots,1,i)
+			plt.scatter(self.features.lon, self.features.lat,
+					c=self.features[featurelist[i-1]], linewidths = 0)
+			plt.colorbar()
+
 	def add_features(self, flist, how='usc', verbose=False):
 
-		if how == 'usc':
-			self.nodelat = self.shapefile.lat
-			self.nodelon = self.shapefile.lon
+		# if how == 'usc':
+		# 	self.nodelat = self.shapefile.lat
+		# 	self.nodelon = self.shapefile.lon
 
 		for f in flist:
 			if verbose: print 'loading ', db; sys.stdout.flush()
@@ -244,7 +256,6 @@ class featurizer():
 			# load database table
 			df1 = get_db(f)
 			
-
 			# merge in lat/lon for census data from shapefile
 			if f in ['usc_age_gender', 'usc_household', 'usc_pop']:
 				df1 = df1.merge(self.shapefile, left_on = 'id2',
@@ -266,7 +277,8 @@ class featurizer():
 				df1['count'] = 1
 				df1 = df1.groupby(['lat_cut', 'lon_cut', 'category']).count()
 				df1 = df1.reset_index().dropna()
-				df2 = df1.pivot(columns = 'category', values = 'count').fillna(0)
+				df2 = df1.pivot(columns = 'category',
+								values = 'count').fillna(0)
 				df1 = df1.merge(df2, left_index=True, right_index=True)
 				df1.drop('category', axis = 1, inplace = True)
 				df1 = df1.groupby(['lat_cut', 'lon_cut']).sum().reset_index()
@@ -303,13 +315,10 @@ class featurizer():
 
 			elif f == 'usc_pop':
 				df1 = df1[['lat', 'lon', 'total']]
+				df1.columns = ['lat', 'lon', 'population']
 
 			elif f == 'walkscore':
 				df1 = df1[['lat', 'lon', 'walkscore']]
-
-			finterp = bin_interpolate(df1.lon, df1.lat, df1.iloc[:,2],
-									  self.nodelon, self.nodelat)
-			finterp = pd.Series(finterp)
 
 			# append results to final data frame
 			for col in df1.columns[2:]:
@@ -325,10 +334,7 @@ class featurizer():
 											  axis = 1)
 
 
-	def plot(self, featurelist = self.features.columns[2:]):
-		plt.scatter(self.features.lon, self.features.lat,
-					c=f.features.sgnf, linewidths = 0)
-		plt.colorbar()
+
 
 
 
