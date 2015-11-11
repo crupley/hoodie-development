@@ -3,14 +3,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import sys
-from itertools import combinations
-from time import time
 
 import scipy.interpolate
 
 from code.makedbs import get_db
-
-import pdb
 
 # constants
 latmin = 37.70784
