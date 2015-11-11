@@ -1,6 +1,7 @@
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import sys
 from itertools import combinations
 from time import time
@@ -322,6 +323,12 @@ class featurizer():
 				else:
 					self.features = pd.concat((self.features, finterp),
 											  axis = 1)
+
+
+	def plot(self, featurelist = self.features.columns[2:]):
+		plt.scatter(self.features.lon, self.features.lat,
+					c=f.features.sgnf, linewidths = 0)
+		plt.colorbar()
 
 
 
