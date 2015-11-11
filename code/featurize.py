@@ -21,14 +21,6 @@ lonmax = -122.35454
 latbins = np.linspace(latmin, latmax, 101)
 lonbins = np.linspace(lonmin, lonmax, 101)
 
-def make_plotmesh(x, y, z):
-    xi, yi = np.meshgrid(x, y)
-    
-    rbf = scipy.interpolate.Rbf(x, y, z, function='linear')
-    zi = rbf(xi, yi)
-    
-    return xi, yi, zi
-
 def cut_df(df):
 	'''
 	INPUT
