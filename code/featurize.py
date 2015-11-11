@@ -44,10 +44,14 @@ def find_closest(testnode, df, nneibs = 4, anglelim = 45):
 								axis=1)
 	neibs = neibs.sort_values('dist')
 
+	if neibs.shape[0] == 0: return []
+
 	closeix = [neibs.index[0]]
 	i = 0
 	while len(closeix) < nneibs:
 	    i += 1
+	    if len(neibs.index) < (i + 1):
+	    	break
 	    idx = neibs.index[i]
 	    angles = [angle(testnode, neibs.ix[idx], neibs.ix[j]) for j in closeix]
 	    if np.all(np.array(angles) > anglelim):
