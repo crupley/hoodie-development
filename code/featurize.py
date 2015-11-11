@@ -38,10 +38,11 @@ def find_closest(testnode, df, nneibs = 4, anglelim = 45):
                    	   testnode.lon - 0.003,
                    	   testnode.lon + 0.003)
 
-	if neibs.shape[0] == 0: return []
-
 	neibs = neibs[['lat', 'lon']]
 	neibs.drop(testnode.name, axis=0, inplace=True)
+
+	if neibs.shape[0] == 0: return []
+
 	neibs['dist'] = neibs.apply(lambda x: dist(x.lat, x.lon,
 											   testnode.lat, testnode.lon),
 								axis=1)
