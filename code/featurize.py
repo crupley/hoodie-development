@@ -14,6 +14,14 @@ def bin_interpolate(datax, datay, dataz, interpx, interpy):
 	return interpz
 
 
+def window(df, latmin, latmax, lonmin, lonmax):
+    df = df[df.lat > latmin]
+    df = df[df.lat < latmax]
+    df = df[df.lon > lonmin]
+    df = df[df.lon < lonmax]
+    return df
+
+
 class featurizer():
 
 	def __init__(self):
