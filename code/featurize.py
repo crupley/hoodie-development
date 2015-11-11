@@ -209,6 +209,24 @@ class featurizer():
 		self.nodelat = self.shapefile.lat
 		self.nodelon = self.shapefile.lon
 
+		self.allfeatures = ['taxable_value', 'grocery', 'restaurant', 
+							'retail', 'ncrimes', 'sgnf',
+							'avg_hh_size', 'population', 'walkscore']
+
+		self.alltables = ['assessment', 'business', 'sfpd', 
+						  'usc_age_gender', 'usc_household',
+						  'usc_pop', 'walkscore']
+
+		self.featurenames = {'taxable_value': 'Property Value',
+							 'grocery': 'Grocery',
+							 'restaurant': 'Restaurants',
+							 'retail': 'Retail',
+							 'ncrimes': 'Crime',
+							 'sgnf': 'Female:Male ratio',
+							 'avg_hh_size': 'Household Size',
+							 'population': 'Population',
+							 'walkscore': 'Walkscore'}
+
 	def window(self, df):
 		df = df[df.lat > self.latmin]
 		df = df[df.lat < self.latmax]
@@ -243,12 +261,17 @@ class featurizer():
 			plt.scatter(self.features.lon, self.features.lat,
 					c=self.features[featurelist[i-1]], linewidths = 0)
 			plt.colorbar()
+			plt.axis('equal')
+			plt.margins(0)
+			ax = plt.gca()
+			ax.set_axis_bgcolor('black')
+			ax.get_xaxis().get_major_formatter().set_useOffset(False)
+			plt.title(featurelist[i-1])
+			plt.xlabel('Longitude')
+			plt.ylabel('Latitude')
+
 
 	def add_features(self, flist, how='usc', verbose=False):
-
-		# if how == 'usc':
-		# 	self.nodelat = self.shapefile.lat
-		# 	self.nodelon = self.shapefile.lon
 
 		for f in flist:
 			if verbose: print 'loading ', db; sys.stdout.flush()
