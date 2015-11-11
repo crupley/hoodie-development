@@ -21,6 +21,40 @@ def window(df, latmin, latmax, lonmin, lonmax):
     df = df[df.lon < lonmax]
     return df
 
+def dist(lat1, lon1, lat2, lon2):
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    return np.sqrt(dlat**2 + dlon**2)
+
+def angle(testnode, neib1, neib2):
+    v1 = testnode[['lat', 'lon']] - neib1[['lat', 'lon']]
+    v2 = testnode[['lat', 'lon']] - neib2[['lat', 'lon']]
+    return np.arccos(v1.dot(v2) / np.linalg.norm(v1) / np.linalg.norm(v2)) * 180 / np.pi
+
+
+def find_closest(testnode, df, nneibs = 4, anglelim = 45):
+	neibs = window(df, testnode.lat - 0.005,
+                   	   testnode.lat + 0.005,
+                   	   testnode.lon - 0.003,
+                   	   testnode.lon + 0.003)
+	neibs = neibs[['lat', 'lon']]
+	neibs.drop(testnode.name, axis=0, inplace=True)
+	neibs['dist'] = neibs.apply(lambda x: dist(x.lat, x.lon,
+											   testnode.lat, testnode.lon),
+								axis=1)
+	neibs = neibs.sort_values('dist')
+
+	closeix = [neibs.index[0]]
+	i = 0
+	while len(closeix) < nneibs:
+	    i += 1
+	    idx = neibs.index[i]
+	    angles = [angle(testnode, neibs.ix[idx], neibs.ix[j]) for j in closeix]
+	    if np.all(np.array(angles) > anglelim):
+	        closeix.append(idx)
+	return closeix
+
+
 
 class featurizer():
 
