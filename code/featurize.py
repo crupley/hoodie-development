@@ -9,6 +9,7 @@ import scipy.interpolate
 
 from code.makedbs import get_db
 
+import pdb
 
 # constants
 latmin = 37.70784
@@ -197,17 +198,27 @@ class featurizer():
 		self.lonmin = -122.5185
 		self.lonmax = -122.35454
 
+		self.nodelat = np.linspace(self.latmin, self.latmax, 101)
+		self.nodelon = np.linspace(self.lonmin, self.lonmax, 101)
+
 		self.latbins = np.linspace(self.latmin, self.latmax, 101)
 		self.lonbins = np.linspace(self.lonmin, self.lonmax, 101)
 
-		df = get_db('usc_shapefile')
+		self.shapefile = self.window(get_db('usc_shapefile'))
+
+	def window(self, df):
 		df = df[df.lat > self.latmin]
 		df = df[df.lat < self.latmax]
 		df = df[df.lon > self.lonmin]
 		df = df[df.lon < self.lonmax]
-		self.shapefile = df
+		return df
 
-
+	def binlatlon(self, df):
+		df['lat_cut'] = pd.cut(df.lat, self.latbins,
+							   labels = self.latbins[1:])
+		df['lon_cut'] = pd.cut(df.lon, self.lonbins,
+							   labels = self.lonbins[1:])
+		return df
 
 	def set_limits(self, latmin, latmax, lonmin, lonmax):
 		self.latmin = latmin
@@ -216,100 +227,101 @@ class featurizer():
 		self.lonmax = lonmax
 
 
-	def set_resolution(self, npoints):
+	def set_bin_resolution(self, npoints):
 		self.latbins = np.linspace(latmin, latmax, npoints)
 		self.lonbins = np.linspace(lonmin, lonmax, npoints)
 
 	def add_features(self, flist, how='usc', verbose=False):
 
 		if how == 'usc':
-			self.latbins = self.shapefile.lat
-			self.lonbins = self.shapefile.lon
+			self.nodelat = self.shapefile.lat
+			self.nodelon = self.shapefile.lon
 
 		for f in flist:
 			if verbose: print 'loading ', db; sys.stdout.flush()
 
 			# load database table
 			df1 = get_db(f)
+			
 
 			# merge in lat/lon for census data from shapefile
 			if f in ['usc_age_gender', 'usc_household', 'usc_pop']:
 				df1 = df1.merge(self.shapefile, left_on = 'id2',
 								right_on = 'geoid')
 
+			df1 = self.window(df1)
+
 			# handling each table type
 			if f == 'assessment':
+				df1 = self.binlatlon(df1)
 				df1 = df1[['lat_cut', 'lon_cut', 'taxable_value']]
 				df1 = df1.groupby(['lat_cut', 'lon_cut']).mean()
 				df1 = df1.reset_index().dropna()
+				df1.columns = ['lat', 'lon', 'taxable_value']
 
-			# elif f == 'business':
-			# 	df1 = df1[['lat_cut', 'lon_cut', 'category']]
-			# 	df1['count'] = 1
-			# 	df1 = df1.groupby(['lat_cut', 'lon_cut', 'category']).count()
-			# 	df1 = df1.reset_index().dropna()
-			# 	df2 = df1.pivot(columns = 'category', values = 'count').fillna(0)
-			# 	df1 = df1.merge(df2, left_index=True, right_index=True)
-			# 	df1.drop('category', axis = 1, inplace = True)
-			# 	df1 = df1.groupby(['lat_cut', 'lon_cut']).sum().reset_index()
-			# 	df1 = df1[['lat_cut', 'lon_cut', 'grocery',
-			# 			   'restaurant', 'retail']]
+			elif f == 'business':
+				df1 = self.binlatlon(df1)
+				df1 = df1[['lat_cut', 'lon_cut', 'category']]
+				df1['count'] = 1
+				df1 = df1.groupby(['lat_cut', 'lon_cut', 'category']).count()
+				df1 = df1.reset_index().dropna()
+				df2 = df1.pivot(columns = 'category', values = 'count').fillna(0)
+				df1 = df1.merge(df2, left_index=True, right_index=True)
+				df1.drop('category', axis = 1, inplace = True)
+				df1 = df1.groupby(['lat_cut', 'lon_cut']).sum().reset_index()
+				df1 = df1[['lat_cut', 'lon_cut', 'grocery',
+						   'restaurant', 'retail']]
+				df1.columns = ['lat', 'lon', 'grocery',
+							   'restaurant', 'retail']
 
-			# elif f == 'sfpd':
-			# 	df1['ncrimes'] = 1
-			# 	df1 = df1.groupby(['lat_cut', 'lon_cut']).count()
-			# 	df1 = df1.dropna().reset_index()
-			# 	df1 = df1[['lat_cut', 'lon_cut', 'ncrimes']]
+			elif f == 'sfpd':
+				df1 = self.binlatlon(df1)
+				df1['ncrimes'] = 1
+				df1 = df1.groupby(['lat_cut', 'lon_cut']).count()
+				df1 = df1.dropna().reset_index()
+				df1 = df1[['lat_cut', 'lon_cut', 'ncrimes']]
+				df1.columns = ['lat', 'lon', 'ncrimes']
 
 			elif f == 'usc_age_gender':
 				df1['sgnf'] = (2 * df1.f / df1.total).fillna(0) - 1
 				df1 = df1[['lat', 'lon', 'sgnf']]
 
-			# elif f == 'usc_household':
+			elif f == 'usc_household':
 
-			# 	# calc average household size
-			# 	total_p = 0
-			# 	p_range = range(1,8)
-			# 	for i in p_range:
-			# 		col = 'p' + str(i)
-			# 		total_p += df1[col] * i
-			# 	av_p = total_p / df1.total
-			# 	df1['avg_hh_size'] = av_p
-			# 	df1.fillna(0, inplace = True)
+				# calc average household size
+				total_p = 0
+				p_range = range(1,8)
+				for i in p_range:
+					col = 'p' + str(i)
+					total_p += df1[col] * i
+				av_p = total_p / df1.total
+				df1['avg_hh_size'] = av_p
+				df1.fillna(0, inplace = True)
 
-			# 	df1 = df1[['lat', 'lon', 'avg_hh_size']]
+				df1 = df1[['lat', 'lon', 'avg_hh_size']]
 
-			# elif f == 'usc_pop':
-			# 	df1 = df1.groupby(['lat_cut', 'lon_cut']).sum()
-			# 	df1 = df1.dropna().reset_index()
-			# 	df1 = df1[['lat_cut', 'lon_cut', 'total']]
-			# 	df1.columns = ['lat', 'lon', 'pop']
+			elif f == 'usc_pop':
+				df1 = df1[['lat', 'lon', 'total']]
 
-			# elif f == 'walkscore':
-			# 	df1 = df1[['lat', 'lon', 'walkscore']]
+			elif f == 'walkscore':
+				df1 = df1[['lat', 'lon', 'walkscore']]
 
 			finterp = bin_interpolate(df1.lon, df1.lat, df1.iloc[:,2],
-									  self.lonbins, self.latbins)
+									  self.nodelon, self.nodelat)
 			finterp = pd.Series(finterp)
 
 			# append results to final data frame
-			if self.features.shape == (0, 0):
-				self.features = df2 = pd.concat((self.latbins, self.lonbins,
-												 finterp), axis = 1)
-				self.features.columns = df1.columns
-			else:
-				self.features = pd.concat((self.features, finterp), axis = 1)
-				self.features.rename(columns = {0: df1.columns[-1]})
+			for col in df1.columns[2:]:
+				finterp = bin_interpolate(df1.lon, df1.lat, df1[col],
+									  self.nodelon, self.nodelat)
+				finterp = pd.Series(finterp, name = col)
 
-
-
-
-
-if __name__ == '__main__':
-	res = feature_permutations()
-	pickle.dump(res, open('data/bin_overlap.pkl', 'wb'))
-	print 'Total elapsed time: ', res.time.sum()
-	# pickle.load(open('data/bin_overlap.pkl', 'rb'))
+				if self.features.shape == (0, 0):
+					self.features = pd.concat((self.nodelat, self.nodelon,
+											   finterp), axis = 1)
+				else:
+					self.features = pd.concat((self.features, finterp),
+											  axis = 1)
 
 
 
