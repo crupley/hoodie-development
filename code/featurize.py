@@ -162,7 +162,7 @@ class featurizer():
 	def add_features(self, flist, how='usc', verbose=False):
 
 		for f in flist:
-			if verbose: print 'loading ', db; sys.stdout.flush()
+			if verbose: print 'loading ', f; sys.stdout.flush()
 
 			# load database table
 			df1 = get_db(f)
