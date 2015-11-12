@@ -26,6 +26,12 @@ def dist(lat1, lon1, lat2, lon2):
     dlon = lon2 - lon1
     return np.sqrt(dlat**2 + dlon**2)
 
+def dist_by_node(node1, node2, df):
+	lat1, lon1 = df.ix[node1][['lat', 'lon']]
+	lat2, lon2 = df.ix[node2][['lat', 'lon']]
+	return dist(lat1, lon1, lat2, lon2)
+	
+
 def angle(testnode, neib1, neib2):
     v1 = testnode[['lat', 'lon']] - neib1[['lat', 'lon']]
     v2 = testnode[['lat', 'lon']] - neib2[['lat', 'lon']]
