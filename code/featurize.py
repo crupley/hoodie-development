@@ -86,6 +86,8 @@ class featurizer():
 		self.nodelat = self.shapefile.lat
 		self.nodelon = self.shapefile.lon
 
+		self.edges = None
+
 		self.allfeatures = ['taxable_value', 'grocery', 'restaurant', 
 							'retail', 'ncrimes', 'sgnf',
 							'avg_hh_size', 'population', 'walkscore']
@@ -232,11 +234,22 @@ class featurizer():
 				else:
 					self.features = pd.concat((self.features, finterp),
 											  axis = 1)
+	def make_edges():
+		edgelambda = lambda x: find_closest(x, df)
+		self.edges = self.features.apply(edgelambda, axis = 1)
 
 
 
+if __name__ == '__main__':
+	
+	f = featurizer()
+	### if file not exists
+	print 'Making features'
+	f.add_features(f.alltables, verbose=True)
 
-
+	### if file not exists
+	print 'Making edges'
+	f.make_edges()
 
 
 
