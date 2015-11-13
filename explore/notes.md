@@ -111,3 +111,6 @@
 ## Database
 
 * export postgres: `pg_dump DBNAME > dbexport.pgsql`
+
+## Google maps
+* [gmpas.js](https://hpneo.github.io/gmaps/)
