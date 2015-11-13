@@ -32,7 +32,7 @@ def dist_by_node(node1, node2, df):
 	return dist(lat1, lon1, lat2, lon2)
 
 def sim(f1, f2):
-	return 1 / np.linalg.norm(f1-f2)
+	return np.linalg.norm(f1-f2)
 
 def sim_by_node(n1, n2, df):
 	f1 = df.ix[n1]
