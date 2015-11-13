@@ -115,6 +115,16 @@ class featurizer():
 							 'population': 'Population',
 							 'walkscore': 'Walkscore'}
 
+		self.smoothing = {'taxable_value': 'Property Value',
+						  'grocery': 'Grocery',
+						  'restaurant': 'Restaurants',
+						  'retail': 'Retail',
+						  'ncrimes': 'Crime',
+						  'sgnf': 'Female:Male ratio',
+						  'avg_hh_size': 0.1,
+						  'population': 1,
+						  'walkscore': 0}
+
 	def window(self, df):
 		df = df[df.lat > self.latmin]
 		df = df[df.lat < self.latmax]
