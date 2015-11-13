@@ -115,12 +115,12 @@ class featurizer():
 							 'population': 'Population',
 							 'walkscore': 'Walkscore'}
 
-		self.smoothing = {'taxable_value': 'Property Value',
-						  'grocery': 'Grocery',
-						  'restaurant': 'Restaurants',
-						  'retail': 'Retail',
-						  'ncrimes': 'Crime',
-						  'sgnf': 'Female:Male ratio',
+		self.smoothing = {'taxable_value': 0,
+						  'grocery': 0,
+						  'restaurant': 0,
+						  'retail': 0,
+						  'ncrimes': 0,
+						  'sgnf': 0,
 						  'avg_hh_size': 0.1,
 						  'population': 1,
 						  'walkscore': 0}
