@@ -19,6 +19,7 @@ def make_edges(latlondf):
 	    edges.index.name = 'edge'
 	return edges.astype('int')
 
+
 def graph_info(graph):
 	print nx.info(graph)
 	print 'Number of clusters:', nx.number_connected_components(graph)
