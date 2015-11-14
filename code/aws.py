@@ -1,6 +1,7 @@
 import networkx as nx
 from collections import Counter
 from time import time
+import cPickle as pickle
 
 
 def graph_reduce(graph, max_size=1):
@@ -33,3 +34,6 @@ def graph_reduce(graph, max_size=1):
             f.write(outs)
         g.remove_edge(*most_connected)
         if g.number_of_edges() == 0: return
+
+if __name__ == '__main__':
+    graph = pickle.load(open())
