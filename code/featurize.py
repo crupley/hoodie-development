@@ -8,8 +8,9 @@ import scipy.interpolate
 
 from code.makedbs import get_db
 
-def bin_interpolate(datax, datay, dataz, interpx, interpy):
-	rbf = scipy.interpolate.Rbf(datax, datay, dataz, function='linear')
+def bin_interpolate(datax, datay, dataz, interpx, interpy, smooth=0):
+	rbf = scipy.interpolate.Rbf(datax, datay, dataz,
+								function='linear', smooth=smooth)
 	interpz = rbf(interpx, interpy)
 	return interpz
 
@@ -81,6 +82,7 @@ class featurizer():
 
 	def __init__(self):
 		self.features = pd.DataFrame()
+		self.featuressmooth = pd.DataFrame()
 
 		self.latmin = 37.70784
 		self.latmax = 37.8195
@@ -119,8 +121,8 @@ class featurizer():
 						  'grocery': 0,
 						  'restaurant': 0,
 						  'retail': 0,
-						  'ncrimes': 0,
-						  'sgnf': 0,
+						  'ncrimes': 0.1,
+						  'sgnf': 0.01,
 						  'avg_hh_size': 0.1,
 						  'population': 1,
 						  'walkscore': 0}
@@ -253,6 +255,9 @@ class featurizer():
 				else:
 					self.features = pd.concat((self.features, finterp),
 											  axis = 1)
+	def smooth_edges():
+		pass
+		
 	def make_edges():
 		edgelambda = lambda x: find_closest(x, df)
 		self.edges = self.features.apply(edgelambda, axis = 1)
