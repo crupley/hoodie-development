@@ -19,7 +19,8 @@ def graph_reduce(graph, max_size=1):
     biggroup = len(max(nx.connected_components(g), key=len))
 
     while biggroup >= max_size:
-        most_connected = Counter(nx.edge_betweenness_centrality(g, weight='sim')).most_common(1)[0][0]
+        btw = nx.edge_betweenness_centrality(g, weight='sim')
+        most_connected = Counter(btw).most_common(1)[0][0]
         node1 = most_connected[0]
         node2 = most_connected[1]
         size = nx.number_connected_components(g)
