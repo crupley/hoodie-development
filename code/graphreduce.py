@@ -14,8 +14,20 @@ def graph_reduce(graph, max_size=1):
     '''
     g = graph.copy()
     fn = str(g.node['namenode']['name']) + '.csv'
-    with open('results/' + fn, 'wb') as f:
-        f.write('node1,node2,size,edges,biggroup,timestamp\n')
+
+    # pick up where we left off
+    if os.path.exists('results/' + fn):
+        # remove identified nodes from graph
+        with open('results/' + fn, 'wb') as f:
+            line = f.readline()
+            for line in f.readlines():
+                lsp = line.split(',')
+                print lsp[0], lsp[1]
+                graph.remove_edge(float(lsp[0]), float(lsp[1]))
+    else:
+        # create results file
+        with open('results/' + fn, 'wb') as f:
+            f.write('node1,node2,size,edges,biggroup,timestamp\n')
 
     biggroup = len(max(nx.connected_components(g), key=len))
 
@@ -29,7 +41,6 @@ def graph_reduce(graph, max_size=1):
         biggroup = len(max(nx.connected_components(g), key=len))
         outitems = (node1, node2, size, edges, biggroup, time())
         outs = '%d,%d,%d,%d,%d,%f\n' % outitems
-        # print outs
         with open('results/' + fn, 'a') as f:
             f.write(outs)
         g.remove_edge(*most_connected)
