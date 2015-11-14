@@ -1,5 +1,6 @@
 import networkx as nx
 from collections import Counter
+import sys
 
 
 def girvan_newman_step(graph):
@@ -13,7 +14,8 @@ def girvan_newman_step(graph):
     size = nx.number_connected_components(graph)
     cur = 0
     while cur <= size:
-        most_connected = Counter(nx.edge_betweenness_centrality(graph)).most_common(1)[0][0]
+        most_connected = Counter(nx.edge_betweenness_centrality(graph, weight='sim')).most_common(1)[0][0]
+        print most_connected; sys.stdout.flush()
         graph.remove_edge(*most_connected)
         cur = nx.number_connected_components(graph)
 
@@ -48,6 +50,7 @@ def find_communities_modularity(G, max_iter=None):
     best_comps = nx.connected_components(G1)
     i = 0
     while G1.number_of_edges() > 0:
+        print G1.number_of_edges(); sys.stdout.flush()
         subgraphs = nx.connected_component_subgraphs(G1)
         modularity = get_modularity(subgraphs, degrees, num_edges)
         if modularity > best_modularity:
