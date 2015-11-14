@@ -39,10 +39,8 @@ if __name__ == '__main__':
     graph = pickle.load(open('g070605.pkl', 'rb'))
 
     # time cal
-    start_time = time()
+    # start_time = time()
+    # nx.edge_betweenness_centrality(graph, weight='sim')
+    # print 'First edge time:', time() - start_time
 
-    nx.edge_betweenness_centrality(graph, weight='sim')
-    print 'First edge time:', time() - start_time
-
-
-    #graph_reduce(graph)
+    graph_reduce(graph)
