@@ -32,3 +32,5 @@ def make_graph(edgesdf, name=None):
 	if name:
 		g.add_node('namenode', name=name)
 
+	return g
+
