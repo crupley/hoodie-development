@@ -32,3 +32,4 @@ def graph_reduce(graph, max_size=1):
         with open('results/' + fn, 'a') as f:
             f.write(outs)
         g.remove_edge(*most_connected)
+        if g.number_of_edges() == 0: return
