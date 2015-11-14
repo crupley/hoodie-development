@@ -120,7 +120,7 @@ class featurizer():
 		self.smoothing = {'taxable_value': 0,
 						  'grocery': 0,
 						  'restaurant': 0,
-						  'retail': 0,
+						  'retail': 0.3,
 						  'ncrimes': 0.1,
 						  'sgnf': 0.01,
 						  'avg_hh_size': 0.1,
