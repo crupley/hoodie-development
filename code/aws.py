@@ -36,4 +36,13 @@ def graph_reduce(graph, max_size=1):
         if g.number_of_edges() == 0: return
 
 if __name__ == '__main__':
-    graph = pickle.load(open())
+    graph = pickle.load(open('g070605.pkl', 'rb'))
+
+    # time cal
+    start_time = time()
+
+    nx.edge_betweenness_centrality(graph, weight='sim')
+    print 'First edge time:', time() - start_time
+
+
+    #graph_reduce(graph)
