@@ -6,6 +6,7 @@ import sys
 
 import scipy.interpolate
 from scipy.interpolate import Rbf
+from sklearn.preprocessing import StandardScaler
 
 from code.makedbs import get_db
 
@@ -276,6 +277,11 @@ class featurizer():
 					  self.fsmooth[col], function='linear',
 					  smooth = self.smoothing[col])
 			self.fsmooth[col] = rbf(self.features.lon, self.features.lat)
+
+		# scale to zero mean, unit standard deviation
+		ssc = StandardScaler()
+		self.fsmooth.iloc[:,2:] = ssc.fit_transform(self.fsmooth.iloc[:,2:])
+
 
 
 		
