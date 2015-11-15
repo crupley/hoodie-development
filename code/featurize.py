@@ -5,11 +5,14 @@ import matplotlib.pyplot as plt
 import sys
 
 import scipy.interpolate
+from scipy.interpolate import Rbf
+from sklearn.preprocessing import StandardScaler
 
 from code.makedbs import get_db
 
-def bin_interpolate(datax, datay, dataz, interpx, interpy):
-	rbf = scipy.interpolate.Rbf(datax, datay, dataz, function='linear')
+def bin_interpolate(datax, datay, dataz, interpx, interpy, smooth=0):
+	rbf = scipy.interpolate.Rbf(datax, datay, dataz,
+								function='linear', smooth=smooth)
 	interpz = rbf(interpx, interpy)
 	return interpz
 
@@ -81,6 +84,7 @@ class featurizer():
 
 	def __init__(self):
 		self.features = pd.DataFrame()
+		self.fsmooth = pd.DataFrame()
 
 		self.latmin = 37.70784
 		self.latmax = 37.8195
@@ -115,12 +119,12 @@ class featurizer():
 							 'population': 'Population',
 							 'walkscore': 'Walkscore'}
 
-		self.smoothing = {'taxable_value': 0,
-						  'grocery': 0,
-						  'restaurant': 0,
-						  'retail': 0,
-						  'ncrimes': 0,
-						  'sgnf': 0,
+		self.smoothing = {'taxable_value': 0.01,
+						  'grocery': 0.1,
+						  'restaurant': 0.01,
+						  'retail': 0.3,
+						  'ncrimes': 0.1,
+						  'sgnf': 0.01,
 						  'avg_hh_size': 0.1,
 						  'population': 1,
 						  'walkscore': 0}
@@ -156,8 +160,8 @@ class featurizer():
 		plt.figure(figsize = (16, 16*nplots))
 		for i in xrange(1, nplots + 1):
 			plt.subplot(nplots,1,i)
-			plt.scatter(self.features.lon, self.features.lat,
-					c=self.features[featurelist[i-1]], linewidths = 0)
+			plt.scatter(self.fsmooth.lon, self.fsmooth.lat,
+					c=self.fsmooth[featurelist[i-1]], linewidths = 0)
 			plt.colorbar()
 			plt.axis('equal')
 			plt.margins(0)
@@ -253,6 +257,33 @@ class featurizer():
 				else:
 					self.features = pd.concat((self.features, finterp),
 											  axis = 1)
+	def smooth_features(self):
+		self.fsmooth = self.features.copy()
+		cols = self.features.drop(['lat', 'lon'], axis=1).columns
+
+		if 'sgnf' in cols:
+			# scale gender ratio by population
+			if 'population' not in cols:
+				self.add_features(['usc_pop'])
+
+		if 'taxable_value' in cols:
+			# log transform taxable value
+			self.fsmooth.taxable_value[self.fsmooth.taxable_value < 0] = 0
+			self.fsmooth.taxable_value = np.log(self.fsmooth.taxable_value+1)
+
+		for col in cols:
+			rbf = Rbf(self.features.lon, self.features.lat, 
+					  self.fsmooth[col], function='linear',
+					  smooth = self.smoothing[col])
+			self.fsmooth[col] = rbf(self.features.lon, self.features.lat)
+
+		# scale to zero mean, unit standard deviation
+		ssc = StandardScaler()
+		self.fsmooth.iloc[:,2:] = ssc.fit_transform(self.fsmooth.iloc[:,2:])
+
+
+
+		
 	def make_edges():
 		edgelambda = lambda x: find_closest(x, df)
 		self.edges = self.features.apply(edgelambda, axis = 1)
