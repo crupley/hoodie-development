@@ -6,8 +6,8 @@ import networkx as nx
 
 from code.featurize import window, find_closest
 
-def make_edges(latlondf):
-	edgelambda = lambda x: find_closest(x, latlondf)
+def make_edges(latlondf, **kwargs):
+	edgelambda = lambda x: find_closest(x, latlondf, *kwargs)
 	n = latlondf.apply(edgelambda, axis = 1)
 
 	edges = pd.DataFrame(columns=['node1', 'node2'])
@@ -26,9 +26,9 @@ def graph_info(graph):
 	print 'Largest cluster:', len(max(nx.connected_components(graph),
 									  key=len))
 
-def make_graph(edgesdf, name=None):
+def make_graph(edgesdf, edge_attr='fdist', name=None):
 	g = nx.from_pandas_dataframe(edgesdf, source='node1',
-								 target='node2', edge_attr='fdist')
+								 target='node2', edge_attr=edge_attr)
 	if name:
 		g.add_node('namenode', name=name)
 
