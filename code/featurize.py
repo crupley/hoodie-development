@@ -85,7 +85,6 @@ class featurizer():
 	def __init__(self):
 		self.features = pd.DataFrame()
 		self.fsmooth = pd.DataFrame()
-		self.fscaled = pd.DataFrame()
 
 		self.latmin = 37.70784
 		self.latmax = 37.8195
@@ -161,8 +160,8 @@ class featurizer():
 		plt.figure(figsize = (16, 16*nplots))
 		for i in xrange(1, nplots + 1):
 			plt.subplot(nplots,1,i)
-			plt.scatter(self.features.lon, self.features.lat,
-					c=self.features[featurelist[i-1]], linewidths = 0)
+			plt.scatter(self.fsmooth.lon, self.fsmooth.lat,
+					c=self.fsmooth[featurelist[i-1]], linewidths = 0)
 			plt.colorbar()
 			plt.axis('equal')
 			plt.margins(0)
