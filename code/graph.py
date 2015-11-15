@@ -16,7 +16,7 @@ def make_edges(latlondf):
 	    for node2 in n.ix[node1]:
 	        newrow = {'node1':node1, 'node2':node2}
 	        edges = edges.append(newrow, ignore_index=True)
-	    edges.index.name = 'edge'
+	edges.index.name = 'edge'
 	return edges.astype('int')
 
 
