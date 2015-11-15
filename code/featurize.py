@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import sys
 
 import scipy.interpolate
+from scipy.interpolate import Rbf
 
 from code.makedbs import get_db
 
@@ -82,7 +83,8 @@ class featurizer():
 
 	def __init__(self):
 		self.features = pd.DataFrame()
-		self.featuressmooth = pd.DataFrame()
+		self.fsmooth = pd.DataFrame()
+		self.fscaled = pd.DataFrame()
 
 		self.latmin = 37.70784
 		self.latmax = 37.8195
@@ -255,8 +257,27 @@ class featurizer():
 				else:
 					self.features = pd.concat((self.features, finterp),
 											  axis = 1)
-	def smooth_edges():
-		pass
+	def smooth_features(self):
+		self.fsmooth = self.features.copy()
+		cols = self.features.drop(['lat', 'lon'], axis=1).columns
+
+		if 'sgnf' in cols:
+			# scale gender ratio by population
+			if 'population' not in cols:
+				self.add_features(['usc_pop'])
+
+		if 'taxable_value' in cols:
+			# log transform taxable value
+			self.fsmooth.taxable_value[self.fsmooth.taxable_value < 0] = 0
+			self.fsmooth.taxable_value = np.log(self.fsmooth.taxable_value+1)
+
+		for col in cols:
+			rbf = Rbf(self.features.lon, self.features.lat, 
+					  self.fsmooth[col], function='linear',
+					  smooth = self.smoothing[col])
+			self.fsmooth[col] = rbf(self.features.lon, self.features.lat)
+
+
 		
 	def make_edges():
 		edgelambda = lambda x: find_closest(x, df)
