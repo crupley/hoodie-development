@@ -129,4 +129,5 @@
 * Tutorials
 	* [macwrithe](http://www.macwright.org/2012/10/31/gis-with-python-shapely-fiona.html) - tutorial on python gis
 	*[humangeo](http://blog.thehumangeo.com/2014/05/12/drawing-boundaries-in-python/) - drawing  boundaries in python
+* [fastkml](https://fastkml.readthedocs.org/en/latest/usage_guide.html) - convert shapely elements to kml
 
