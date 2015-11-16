@@ -11,6 +11,7 @@ def crawl_cluster(knum, featuredf, graph):
 
 	# randomly initialize nodes
 	nodes = np.random.choice(df.index, size=knum, replace=False)
+	print nodes
 
 	# initialize group membership to -1 (no group)
 	df['group'] = -1
