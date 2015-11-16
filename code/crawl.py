@@ -22,13 +22,15 @@ def crawl_cluster(knum, featuredf, graph):
 	groupavg = df.groupby('group').mean()
 	calc_dist = lambda row: fe.sim(groupavg.ix[row.group][2:],
 								   df.ix[row.node][2:-1])
+
+	groupednodes = set(nodes)
 	while True:
 	    groupavg = df.groupby('group').mean()
-	    groupednodes = set(df.index[df.group != -1].astype('int'))
 
 	    # build distance sets
 	    dist = pd.DataFrame(columns=['group', 'node'])
 
+	    # make list of neighbors to each cluster
 	    for k in xrange(knum):
 	        nodegroup = set(df[df.group == k].index)
 	        neibnodes = set()
@@ -40,11 +42,15 @@ def crawl_cluster(knum, featuredf, graph):
 	                                'node': list(neibnodes)})
 	        dist = dist.append(newrows, ignore_index=True).astype('int')
 
+	    # no more neighbors = done!
 	    if dist.shape[0] == 0: break
+
+	    # calculate distance between neighbors and cluster mean
 	    dist['dist'] = dist.apply(calc_dist, axis=1)
 
 	    # assign nearest node to group
 	    bestmatch = dist.sort_values('dist').iloc[0]
 	    df.group.loc[df.index == bestmatch.node] = bestmatch.group
+	    groupednodes = groupednodes.union({int(bestmatch.node)})
 
 	return df
