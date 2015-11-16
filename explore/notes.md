@@ -112,5 +112,18 @@
 
 * export postgres: `pg_dump DBNAME > dbexport.pgsql`
 
-## Google maps
+## Graph
+
+* igraph - lots of c dependencies
+* [**graph-tool**](https://graph-tool.skewed.de) - use this asap; 20x-170x faster than networkx
+
+## Maps
 * [gmpas.js](https://hpneo.github.io/gmaps/)
+* [gmaps api](https://developers.google.com/maps/) - documentation
+* [mapshaper](http://www.mapshaper.org/) - simplify shapefiles to reduce size
+* [snazzymaps](https://snazzymaps.com/) - google maps color schemes
+* [arcgis](http://crupley.maps.arcgis.com/) - utility for working with map data; dissolve boundaries
+* shapely - python package - work with shapes, polygons, etc
+* ogr2ogr - convert among file formats: shapefile, kml, geojson, csv, postgresql
+* [macwrithe](http://www.macwright.org/2012/10/31/gis-with-python-shapely-fiona.html) - tutorial on python gis
+
