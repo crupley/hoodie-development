@@ -25,7 +25,11 @@ def crawl_cluster(knum, featuredf, graph):
 								   df.ix[row.node][2:-1])
 
 	groupednodes = set(nodes)
-	while True:
+	i = 0
+	n = g.number_of_nodes()
+	while i < n:
+		i += 1
+
 	    groupavg = df.groupby('group').mean()
 
 	    # build distance sets
