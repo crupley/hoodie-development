@@ -26,7 +26,7 @@ def crawl_cluster(knum, featuredf, graph):
 
 	groupednodes = set(nodes)
 	i = 0
-	n = g.number_of_nodes()
+	n = graph.number_of_nodes()
 	while i < n:
 	    i += 1
 
