@@ -28,7 +28,7 @@ def crawl_cluster(knum, featuredf, graph):
 	i = 0
 	n = g.number_of_nodes()
 	while i < n:
-		i += 1
+	    i += 1
 
 	    groupavg = df.groupby('group').mean()
 
