@@ -1,44 +1,50 @@
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import cPickle as pickle
 import networkx as nx
 
 import code.featurize as fe
-import code.graph as gr
-
-def calc_dist(row):
-    return fe.sim(groupavg.ix[row.group][2:], dfsm.ix[row.node][2:-1])
 
 
-knum = 2
-dfsm['group'] = -1
+def crawl_cluster(knum, featuredf, graph):
 
-# initialize nodes
-nodes = np.random.choice(dfsm.index, size=knum, replace=False)
-for gr, node in enumerate(nodes):
-    dfsm.group.loc[node] = gr
+	df = featuredf.copy()
 
-for i in xrange(10):
-	groupavg = dfsm.groupby('group').mean()
+	# randomly initialize nodes
+	nodes = np.random.choice(df.index, size=knum, replace=False)
 
-	# build distance sets
-	dist = pd.DataFrame(columns=['group', 'node'])
+	# initialize group membership to -1 (no group)
+	df['group'] = -1
 
-	for k in xrange(knum):
-	    groupnodes = set(dfsm[dfsm.group == k].index)
-	    neibnodes = set()
-	    for node in groupnodes:
-	        neibnodes = neibnodes.union(set(nx.all_neighbors(g, node)))
-	    # remove group nodes from list
-	    neibnodes = neibnodes.difference(groupnodes)
-	    newrows = pd.DataFrame({'group': k * np.ones(len(neibnodes)),
-	                            'node': list(neibnodes)})
-	    dist = dist.append(newrows, ignore_index=True).astype('int')
+	# assign initial nodes
+	for gr, node in enumerate(nodes):
+	    df.group.loc[node] = gr
 
-	dist['dist'] = dist.apply(calc_dist, axis=1)
+	groupavg = df.groupby('group').mean()
+	calc_dist = lambda row: fe.sim(groupavg.ix[row.group][2:],
+								   df.ix[row.node][2:-1])
+	while True:
+	    groupavg = df.groupby('group').mean()
+	    groupednodes = set(df.index[df.group != -1].astype('int'))
 
-	# assign nearest node to group
-	bestmatch = dist.sort_values('dist').iloc[0]
-	dfsm.group.loc[dfsm.index == bestmatch.node] = bestmatch.group
-	dfsm.group[dfsm.group != -1]
+	    # build distance sets
+	    dist = pd.DataFrame(columns=['group', 'node'])
+
+	    for k in xrange(knum):
+	        nodegroup = set(df[df.group == k].index)
+	        neibnodes = set()
+	        for node in nodegroup:
+	            neibnodes = neibnodes.union(set(nx.all_neighbors(graph,node)))
+	        # remove group nodes from list
+	        neibnodes = neibnodes.difference(groupednodes)
+	        newrows = pd.DataFrame({'group': k * np.ones(len(neibnodes)),
+	                                'node': list(neibnodes)})
+	        dist = dist.append(newrows, ignore_index=True).astype('int')
+
+	    if dist.shape[0] == 0: break
+	    dist['dist'] = dist.apply(calc_dist, axis=1)
+
+	    # assign nearest node to group
+	    bestmatch = dist.sort_values('dist').iloc[0]
+	    df.group.loc[df.index == bestmatch.node] = bestmatch.group
+
+	return df
