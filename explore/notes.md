@@ -125,5 +125,7 @@
 * [arcgis](http://crupley.maps.arcgis.com/) - utility for working with map data; dissolve boundaries
 * shapely - python package - work with shapes, polygons, etc
 * ogr2ogr - convert among file formats: shapefile, kml, geojson, csv, postgresql
-* [macwrithe](http://www.macwright.org/2012/10/31/gis-with-python-shapely-fiona.html) - tutorial on python gis
+* Tutorials
+	* [macwrithe](http://www.macwright.org/2012/10/31/gis-with-python-shapely-fiona.html) - tutorial on python gis
+	*[humangeo](http://blog.thehumangeo.com/2014/05/12/drawing-boundaries-in-python/) - drawing  boundaries in python
 
