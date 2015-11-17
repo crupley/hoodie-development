@@ -79,7 +79,7 @@ def build_graph(edges, distances, graph_name=None):
     edges: df with node1, node2, and dist
     '''
 
-    g = Graph()
+    g = Graph(directed=False)
 
     # create graph properties
     gp = g.new_graph_property('string')
@@ -88,7 +88,6 @@ def build_graph(edges, distances, graph_name=None):
     eprop = g.new_edge_property('float')
     g.edge_properties['dist'] = eprop #feature distance
     g.edge_properties['btw'] = eprop  #betweenness
-    g.list_properties()
 
     # create edges and edge weights
     g.add_edge_list(zip(edges.node1, edges.node2))

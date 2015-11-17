@@ -41,7 +41,7 @@ def fdist(f1, f2):
 	'''
 	return np.linalg.norm(f1-f2)**2
 
-def fdist(n1, n2, df):
+def fdist_by_node(n1, n2, df):
 	f1 = df.ix[n1]
 	f2 = df.ix[n2]
 	return fdist(f1, f2)
