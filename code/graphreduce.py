@@ -85,7 +85,7 @@ def build_graph(edges, distances, graph_name=None):
     gp = g.new_graph_property('string')
     g.graph_properties['Name'] = gp
     g.graph_properties['Name'] = graph_name
-    eprop = g.new_edge_property("float")
+    eprop = g.new_edge_property('float')
     g.edge_properties['dist'] = eprop #feature distance
     g.edge_properties['btw'] = eprop  #betweenness
     g.list_properties()

@@ -34,13 +34,17 @@ def dist_by_node(node1, node2, df):
 	lat2, lon2 = df.ix[node2][['lat', 'lon']]
 	return dist(lat1, lon1, lat2, lon2)
 
-def sim(f1, f2):
-	return np.linalg.norm(f1-f2)
+def fdist(f1, f2):
+	'''
 
-def sim_by_node(n1, n2, df):
+	feature distance
+	'''
+	return np.linalg.norm(f1-f2)**2
+
+def fdist(n1, n2, df):
 	f1 = df.ix[n1]
 	f2 = df.ix[n2]
-	return sim(f1, f2)
+	return fdist(f1, f2)
 
 	
 

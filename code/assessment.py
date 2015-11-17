@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 
-from code.featurize import sim
+from code.featurize import fdist
 
 def bigsize(row):
     g.remove_edge(row.node1, row.node2)
@@ -31,7 +31,7 @@ def assign_clusters(df, graph):
 
 def row_errorsq(row, cluster_means):
     rowf = row.drop(['cnum'])
-    return (sim(rowf, cluster_means.ix[int(row.cnum)]))**2
+    return (fdist(rowf, cluster_means.ix[int(row.cnum)]))**2
 
 
 def wcss(df):
