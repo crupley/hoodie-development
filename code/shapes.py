@@ -8,7 +8,9 @@ import math
 def alpha_shape(points, alpha):
     """
 
-    ** from http://blog.thehumangeo.com/2014/05/12/drawing-boundaries-in-python/ **
+    ** function from
+    http://blog.thehumangeo.com/2014/05/12/drawing-boundaries-in-python/ **
+    
     Compute the alpha shape (concave hull) of a set
     of points.
  
