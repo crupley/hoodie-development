@@ -1,9 +1,9 @@
 import itertools
 import cPickle as pickle
 from multiprocessing import Pool
+import sys
 
 from code.graphreduce import build_graph
-from code.featurize import fdist_by_node
 
 
 f = pickle.load(open('features.pkl', 'rb'))
@@ -21,7 +21,20 @@ fnums = {0: 'taxable_value',
          8: 'walkscore'}
 flist = fnums.keys()
 
+def fdist(f1, f2):
+	'''
+
+	feature distance
+	'''
+	return np.linalg.norm(f1-f2)**2
+
+def fdist_by_node(n1, n2, df):
+	f1 = df.ix[n1]
+	f2 = df.ix[n2]
+	return fdist(f1, f2)
+
 def make_graph(perm):
+	sys.path.append('./code')
 	# calculate feature distances for each edge
 	labs = [fnums[c] for c in perm]
 	fdlambda = lambda x: fdist_by_node(x.node1, x.node2, df[labs])
