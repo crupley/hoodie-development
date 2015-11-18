@@ -46,8 +46,8 @@ def f(g):
 if __name__ == '__main__':
 
 	#gs = pickle.load(open('g8.pkl', 'rb'))
-	files = os.listdir('results/graphs')
-	gs = map(lambda x: pickle.load(open('results/graphs/' + x, 'rb')), files)
+	files = [f for f in os.listdir('results/graphs') if f[-2:] == 'gt']
+	gs = map(lambda x: load_graph('results/graphs/' + x), files)
 
 	p = Pool()
 	outputs = p.map(f, gs)
