@@ -1,5 +1,5 @@
 
-from multiprocessing import Pool, Queue
+from multiprocessing import Pool
 from time import time
 import numpy as np
 import cPickle as pickle
@@ -15,8 +15,13 @@ def graph_reduce_gt(graph, filename):
     '''
     g = Graph(graph)
     cuts = []
+
+    # exit if file already exists
+    if os.path.isfile(filename): return
+
     with open(filename, 'wb') as f:
         f.write('source,target,num_edges,timestamp\n')
+        
     while g.num_edges() > 0:
         betweenness(g, eprop = g.ep.btw, weight = g.ep.dist)
 
@@ -40,7 +45,9 @@ def f(g):
 
 if __name__ == '__main__':
 
-	gs = pickle.load(open('g8.pkl', 'rb'))
+	#gs = pickle.load(open('g8.pkl', 'rb'))
+	files = os.listdir('results/graphs')
+	gs = map(lambda x: pickle.load(open('results/graphs/' + x, 'rb')), files)
 
 	p = Pool()
 	outputs = p.map(f, gs)
