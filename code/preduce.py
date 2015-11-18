@@ -1,5 +1,6 @@
 
 from multiprocessing import Pool, Queue
+from time import time
 import numpy as np
 import cPickle as pickle
 import os
