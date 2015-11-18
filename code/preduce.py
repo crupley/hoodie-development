@@ -14,5 +14,5 @@ if __name__ == '__main__':
 
 	gs = pickle.load(open('g4.pkl', 'rb'))
 
-	p = Pool(processes=2)
+	p = Pool()
 	outputs = p.map(f, gs)
