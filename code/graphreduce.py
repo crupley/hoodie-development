@@ -30,7 +30,7 @@ def graph_reduce(graph, max_size=1):
     else:
         # create results file
         with open('results/' + fn, 'wb') as f:
-            f.write('node1,node2,size,edges,biggroup,timestamp\n')
+            f.write('node1,node2,nclust,edges,biggroup,timestamp\n')
 
     biggroup = len(max(nx.connected_components(g), key=len))
 
@@ -39,10 +39,10 @@ def graph_reduce(graph, max_size=1):
         most_connected = Counter(btw).most_common(1)[0][0]
         node1 = most_connected[0]
         node2 = most_connected[1]
-        size = nx.number_connected_components(g)
+        nclust = nx.number_connected_components(g)
         edges = g.number_of_edges()
         biggroup = len(max(nx.connected_components(g), key=len))
-        outitems = (node1, node2, size, edges, biggroup, time())
+        outitems = (node1, node2, nclust, edges, biggroup, time())
         outs = '%d,%d,%d,%d,%d,%f\n' % outitems
         with open('results/' + fn, 'a') as f:
             f.write(outs)
