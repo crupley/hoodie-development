@@ -6,6 +6,7 @@ import sys
 from code.graphreduce import build_graph
 
 
+
 f = pickle.load(open('features.pkl', 'rb'))
 df = f.fsmooth.copy()
 edges = pickle.load(open('edges.pkl', 'rb'))
@@ -34,7 +35,7 @@ def fdist_by_node(n1, n2, df):
 	return fdist(f1, f2)
 
 def make_graph(perm):
-	sys.path.append('./code')
+	sys.path.append('/home/ubuntu/repos/hoodie/code')
 	# calculate feature distances for each edge
 	labs = [fnums[c] for c in perm]
 	fdlambda = lambda x: fdist_by_node(x.node1, x.node2, df[labs])
