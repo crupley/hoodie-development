@@ -37,7 +37,7 @@ def graph_reduce_gt(graph, filename):
         g.remove_edge(maxedge)
     return cuts
 
-def f(g):
+def fun(g):
 	fn = 'results/' + g.gp.Name + '.csv'
 	c = graph_reduce_gt(g, fn)
 	return c
@@ -50,4 +50,4 @@ if __name__ == '__main__':
 	gs = map(lambda x: load_graph('results/graphs/' + x), files)
 
 	p = Pool()
-	outputs = p.map(f, gs)
+	outputs = p.map(fun, gs)
