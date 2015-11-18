@@ -52,9 +52,9 @@ def row_errorsq(row, cluster_means):
 
 def wcss(featuredf, cnum):
     df = featuredf.copy()
-	df['cnum'] = cnum    # features = df.drop(['lat', 'lon'], axis = 1)
+    df['cnum'] = cnum    # features = df.drop(['lat', 'lon'], axis = 1)
     cluster_means = df.groupby('cnum').mean()
-    dfcp['errors'] = df.apply(lambda x: row_errorsq(x, cluster_means),
+    df['errors'] = df.apply(lambda x: row_errorsq(x, cluster_means),
     							axis = 1)
 
     return df.groupby('cnum').sum()['errors']
@@ -74,15 +74,18 @@ def elbow_plot(cutdf, featuredf, maxk=30):
 	graph = make_graph(cutdf)
 
 	nclusterslast = nx.number_connected_components(graph)
-	ks.append(nclusterslast)
+	# ks.append(nclusterslast)
+	# wcsses
 
 	for i in cutdf.index:
 		nclusters = cutcon(cutdf.ix[i], graph)
 		if nclusters > nclusterslast:
+			# print i, nclusters
 			nclusterslast = nclusters
 			ks.append(nclusters)
 			cnum = assign_clusters(featuredf.index, graph)
-			wcsses.append(wcss(featuredf, cnum))
+			wcsses.append(wcss(featuredf, cnum).sum())
+			if nclusters >= maxk: return ks, wcsses
 
 
 	# for k in ks:
