@@ -39,7 +39,7 @@
         min-width: 21px;
         background-color: rgb(255, 255, 255);
         background-clip: padding-box;
-
+        /*added*/
         position: absolute;
         top: 50px;
         left: 10px;
@@ -174,12 +174,17 @@ function initMap() {
             <button onclick="myFunction()">Go!</button><br>
             <br>
             nchecked: <p id="results"></p>
+            <!-- joe's jq
+            $(“checkbox”).hover(function(e){
+              e.preventDefault():
+              alert(“this has been clicked”);
+            }); -->
 
 
         <p class="year">Year: <span id="year" value="2009"></span></p>
       </div>
     <!--Div that will hold the pie chart-->
-    <div id="chart_div" style="width:100; height:300"></div>
+    <div id="chart_div" style="width:100; height:100"></div>
     <p align="left">Most Similar:</p>
     <div id="similar">s1, s2</div>
     <p align="left">Most Different:</p>
