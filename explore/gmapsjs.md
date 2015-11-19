@@ -66,7 +66,14 @@ function initMap() {
 	```
 	On click, displays the text in the kml file under 'description'
 
+* `document.getElementById("Name")` - get/set things in html area by id
+	* `<p id="Name">text</p>`
+
 ## Other resources
 
 * [mapbuildr](https://mapbuildr.com/buildr) - interactive google map property creation
 * [kml reference](https://developers.google.com/kml/documentation/kmlreference)
+
+## Charts
+
+* [google charts](https://developers.google.com/chart/interactive/docs/)
