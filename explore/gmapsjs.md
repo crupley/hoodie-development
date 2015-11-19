@@ -68,4 +68,5 @@ function initMap() {
 
 ## Other resources
 
-[mapbuildr](https://mapbuildr.com/buildr) - interactive google map property creation
+* [mapbuildr](https://mapbuildr.com/buildr) - interactive google map property creation
+* [kml reference](https://developers.google.com/kml/documentation/kmlreference)

@@ -30,7 +30,7 @@ function initMap() {
 
   //initiate map
   var map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 37.755, lng: -122.43}, //SF
+    center: {lat: 37.762, lng: -122.44}, //SF
     zoom: 12
     //mapTypeControlOptions: {
     //  mapTypeIds: [google.maps.MapTypeId.ROADMAP, customMapTypeId]
@@ -42,7 +42,7 @@ function initMap() {
   });
 
   kmlLayer.addListener('click', function(kmlEvent) {
-    var text = "hello!";
+    var text = kmlEvent.featureData.description;
     showInContentWindow(text);
   });
 
