@@ -14,15 +14,36 @@
         height: 100%;
       }
       #panel {
-        position: absolute;
-        top: 0px;
-        left: 99%;
-        margin-left: -300px;
+/*        position: absolute;
+        top: 50px;
+        left: 10px;
+        margin: 0px;
         z-index: 5;
         background-color: #fff;
         padding: 5px;
-        border: 1px solid #999;
-      }
+        border: 1px solid #999;*/
+        
+        /*copied from map style*/
+        direction: ltr;
+        overflow: hidden;
+        text-align: center;
+        color: rgb(86, 86, 86);
+        font-family: Roboto, Arial, sans-serif;
+        -webkit-user-select: none;
+        font-size: 11px;
+        padding: 8px;
+        border-bottom-left-radius: 2px;
+        border-top-left-radius: 2px;
+        -webkit-background-clip: padding-box;
+        box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
+        min-width: 21px;
+        background-color: rgb(255, 255, 255);
+        background-clip: padding-box;
+
+        position: absolute;
+        top: 50px;
+        left: 10px;
+          }
     </style>
   </head>
   <body>
@@ -123,8 +144,16 @@ function initMap() {
     </script>
     <script>
     function myFunction() {
-      var x = document.getElementById("cb00");
-      document.getElementById("results").innerHTML = x.checked;
+      var x00 = document.getElementById("cb00");
+      var x01 = document.getElementById("cb01");
+      var x02 = document.getElementById("cb02");
+      var x03 = document.getElementById("cb03");
+      var x04 = document.getElementById("cb04");
+      var x05 = document.getElementById("cb05");
+      var x06 = document.getElementById("cb06");
+      var x07 = document.getElementById("cb07");
+      var x08 = document.getElementById("cb08");
+      document.getElementById("results").innerHTML = x00.checked + x01.checked + x02.checked + x03.checked + x04.checked + x05.checked + x06.checked + x07.checked + x08.checked;
     }
 
     </script>
@@ -135,15 +164,30 @@ function initMap() {
       <b>Select Features</b.
       <p type="text" id="crimes" /> 
       </div>
-      <div>
+      <div id="Options">
         <!-- <input type="range" id="year_slider" min="2009" max="2014" step="1" value="2009" -->
             <!-- onchange="show_year();"> <br> -->
+
+            <select>
+              <option value="data">Data</option>
+              <option value="neighborhoods">Neighborhoods</option>
+              <option value="compare">Compare</option>å
+            </select><br>
+            <hr>
             <!-- checkbox -->
-            Feature0: <input type="checkbox" id="cb00">
-            Feature1: <input type="checkbox" id="cb01">
-            Feature2: <input type="checkbox" id="cb02">
-            <button onclick="myFunction()">Go!</button>
-            <p id="results"></p>
+            Feature0: <input type="checkbox" id="cb00"><br>
+            Feature1: <input type="checkbox" id="cb01"><br>
+            Feature2: <input type="checkbox" id="cb02"><br>
+            Feature3: <input type="checkbox" id="cb03"><br>
+            Feature4: <input type="checkbox" id="cb04"><br>
+            Feature5: <input type="checkbox" id="cb05"><br>
+            Feature6: <input type="checkbox" id="cb06"><br>
+            Feature7: <input type="checkbox" id="cb07"><br>
+            Feature8: <input type="checkbox" id="cb08"><br>
+            <br>
+            <button onclick="myFunction()">Go!</button><br>
+            <br>
+            nchecked: <p id="results"></p>
 
 
         <p class="year">Year: <span id="year" value="2009"></span></p>
