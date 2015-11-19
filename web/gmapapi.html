@@ -13,10 +13,20 @@
       #map {
         height: 100%;
       }
+      #panel {
+        position: absolute;
+        top: 0px;
+        left: 99%;
+        margin-left: -300px;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+      }
     </style>
   </head>
   <body>
-    <div id="map"></div>
+    <div id="map"><div id="hello">hello</div></div>
     <script>
 
 
@@ -59,5 +69,20 @@ function initMap() {
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYqyh-lKoQk0GcE75hO10Kbiv3Rs1sUc8&callback=initMap"
         async defer></script>
+
+  <div id="panel">
+      <div>
+      <b>Oakland Neighborhoods</b.
+      <p type="text" id="crimes" /> 
+      </div>
+      <div>
+        <input type="range" id="year_slider" min="2009" max="2014" step="1" value="2009"
+            onchange="show_year();"> <br>
+        <p class="year">Year: <span id="year" value="2009"></span></p>
+      </div>
+    <div id="chart_div_one"></div>
+    <div id="chart_div_two"></div>
+    <div id="chart_div_three"></div>
+    </div>
   </body>
 </html>
