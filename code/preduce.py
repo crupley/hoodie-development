@@ -49,5 +49,10 @@ if __name__ == '__main__':
 	files = [f for f in os.listdir('results/graphs') if f[-2:] == 'gt']
 	gs = map(lambda x: load_graph('results/graphs/' + x), files)
 
-	p = Pool()
-	outputs = p.map(fun, gs)
+    # parallel version
+	# p = Pool()
+	# outputs = p.map(fun, gs)
+
+    # serial version
+    for g in gs:
+        fun(g)
