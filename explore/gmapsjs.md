@@ -37,3 +37,9 @@ function initMap() {
 	* setMap(map:Map) - renders kml on specified Map
 
 * `myMap.data.addGeoJson(...);`
+
+
+
+## Other resources
+
+[mapbuildr](https://mapbuildr.com/buildr) - interactive google map property creation
