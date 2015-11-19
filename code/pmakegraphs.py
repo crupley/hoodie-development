@@ -2,14 +2,19 @@ import itertools
 import cPickle as pickle
 from multiprocessing import Pool
 import sys
+import numpy as np
+import pandas as pd
 
-from code.graphreduce import build_graph
+from graphreduce import build_graph
+import featurize
+from code.featurize import featurizer
 
 
-
-f = pickle.load(open('features.pkl', 'rb'))
-df = f.fsmooth.copy()
-edges = pickle.load(open('edges.pkl', 'rb'))
+# f = pickle.load(open('features.pkl', 'rb'))
+# df = pickle.load(open('featuresdf.pkl', 'rb'))
+df = pd.read_csv('featuresdf.csv')
+# edges = pickle.load(open('edges.pkl', 'rb'))
+edges = pd.read_csv('edges.csv')
 
 fnums = {0: 'taxable_value',
          1: 'grocery',
@@ -75,4 +80,4 @@ if __name__ == '__main__':
 
 	# make graphs in parallel
 	p = Pool()
-	outputs = p.map(make_graph, perms[:2])
+	outputs = p.map(make_graph, perms)
