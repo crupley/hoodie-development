@@ -138,3 +138,19 @@ def cut2cluster(featurelist, nclusters):
 
 	# assign cluster numbers
 	return assign_clusters(nodelist, graph)
+
+def feature_bars(featuredf, cnum, **kwargs):
+	'''
+	barplot of features grouped by cluster number
+	'''
+	df = featuredf.copy()
+	df['cnum'] = cnum
+
+	# scale values 0-1 then subtract average
+	df = df.groupby('cnum').mean()
+	df = df.sub(df.min(axis=0))
+	df = df.div(df.max(axis=0))
+	df = df.sub(df.mean(axis=0))
+	
+	df.T.plot(kind='bar', subplots=True, sharey=True, **kwargs)
+
