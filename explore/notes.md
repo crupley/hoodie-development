@@ -130,4 +130,27 @@
 	* [macwrithe](http://www.macwright.org/2012/10/31/gis-with-python-shapely-fiona.html) - tutorial on python gis
 	*[humangeo](http://blog.thehumangeo.com/2014/05/12/drawing-boundaries-in-python/) - drawing  boundaries in python
 * [fastkml](https://fastkml.readthedocs.org/en/latest/usage_guide.html) - convert shapely elements to kml
+* voronoi map tesselation: http://stackoverflow.com/questions/20515554/colorize-voronoi-diagram
 
+## docstring
+    """
+    Reconstruct infinite voronoi regions in a 2D diagram to finite
+    regions.
+
+    Parameters
+    ----------
+    vor : Voronoi
+        Input diagram
+    radius : float, optional
+        Distance to 'points at infinity'.
+
+    Returns
+    -------
+    regions : list of tuples
+        Indices of vertices in each revised Voronoi regions.
+    vertices : list of tuples
+        Coordinates for revised Voronoi vertices. Same as coordinates
+        of input vertices, with 'points at infinity' appended to the
+        end.
+
+    """

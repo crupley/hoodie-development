@@ -9,6 +9,7 @@ from graphreduce import build_graph
 import featurize
 from code.featurize import featurizer
 
+
 # f = pickle.load(open('features.pkl', 'rb'))
 # df = pickle.load(open('featuresdf.pkl', 'rb'))
 df = pd.read_csv('featuresdf.csv')
@@ -39,7 +40,7 @@ def fdist_by_node(n1, n2, df):
 	return fdist(f1, f2)
 
 def make_graph(perm):
-	sys.path.append('./code')
+	sys.path.append('/home/ubuntu/repos/hoodie/code')
 	# calculate feature distances for each edge
 	labs = [fnums[c] for c in perm]
 	fdlambda = lambda x: fdist_by_node(x.node1, x.node2, df[labs])
