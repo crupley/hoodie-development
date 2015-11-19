@@ -36,10 +36,20 @@ function initMap() {
     //  mapTypeIds: [google.maps.MapTypeId.ROADMAP, customMapTypeId]
     //}
   });
-  var ctaLayer = new google.maps.KmlLayer({
+  var kmlLayer = new google.maps.KmlLayer({
     url: 'https://github.com/crupley/hoodie/raw/master/results/gall.kml',
     map: map
   });
+
+  kmlLayer.addListener('click', function(kmlEvent) {
+    var text = "hello!";
+    showInContentWindow(text);
+  });
+
+  function showInContentWindow(text) {
+    var sidediv = document.getElementById('content-window');
+    sidediv.innerHTML = text;
+  }
 
   // more style
   map.mapTypes.set(customMapTypeId, customMapType);

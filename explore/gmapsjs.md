@@ -38,7 +38,33 @@ function initMap() {
 
 * `myMap.data.addGeoJson(...);`
 
+* kml event
 
+	```
+  kmlLayer.addListener('click', function(kmlEvent) {
+    var text = kmlEvent.featureData.description;
+    showInContentWindow(text);
+  });
+
+  function showInContentWindow(text) {
+    var sidediv = document.getElementById('content-window');
+    sidediv.innerHTML = text;
+  }
+	```
+	
+	```
+	<?xml version="1.0" encoding="utf-8"?>
+	<kml xmlns="http://www.opengis.net/kml/2.2">
+	  <Placemark>
+	    <name>My office</name>
+	    <description>This is the location of my office.</description>
+	    <Point>
+	      <coordinates>-122.087461,37.422069</coordinates>
+	    </Point>
+	  </Placemark>
+	</kml>
+	```
+	On click, displays the text in the kml file under 'description'
 
 ## Other resources
 
