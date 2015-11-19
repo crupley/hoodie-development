@@ -46,7 +46,7 @@ def fun(g):
 if __name__ == '__main__':
 
     #gs = pickle.load(open('g8.pkl', 'rb'))
-    files = [f for f in os.listdir('results/graphs') if f[-2:] == 'gt']
+    files = [f for f in os.listdir('results/graphs') if (f[-2:] == 'gt') and (len(f) < 12)]
     gs = map(lambda x: load_graph('results/graphs/' + x), files)
 
     # parallel version
