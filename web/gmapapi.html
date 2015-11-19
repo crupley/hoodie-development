@@ -26,7 +26,7 @@
     </style>
   </head>
   <body>
-    <div id="map"><div id="hello">hello</div></div>
+    <div id="map"></div>
     <script>
 
 
@@ -70,14 +70,82 @@ function initMap() {
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYqyh-lKoQk0GcE75hO10Kbiv3Rs1sUc8&callback=initMap"
         async defer></script>
 
+  // from oakland
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the chart package
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded
+      google.setOnLoadCallback(drawChart_percent);
+      google.setOnLoadCallback(drawChart_weekend);
+      google.setOnLoadCallback(drawChart_day);
+
+      // Callback that creates and populates a data table,
+      // instantiates the crime by type chart, passes in the data and
+      // draws it
+      function drawChart_count(crime_data) {
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        var crime_data = typeof crime_data !== 'undefined' ? crime_data: 0;
+        var q_count = crime_data[0]
+        var nv_count = crime_data[1];
+        var vbi_count = crime_data[2];
+        var vt_count = crime_data[3];
+        var v_count = crime_data[4];
+        data.addColumn('string', 'Crime Category');
+        data.addColumn('number', 'Crimes');
+        data.addRows([
+          ['Quality', q_count],
+          ['Nonviolent', nv_count],
+          ['Car Break In', vbi_count],
+          ['Car Theft', vt_count],
+          ['Violent', v_count]
+        ]);
+
+        // Set chart options
+        var options = {'title':'Crime Counts by Category',
+                       'width':300,
+                       'height':300,
+                       'legend':'none',
+                       'vAxis':{
+                          'title':"Count",
+                          'viewWindowMode':'explicit',
+                          'viewWindow':{'max':300,'min':0}}
+                       };
+
+        // Instantiate and draw chart, passing in options
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div_one'));
+        chart.draw(data, options);
+      }
+
+    </script>
+    <script>
+    function myFunction() {
+      var x = document.getElementById("cb00");
+      document.getElementById("results").innerHTML = x.checked;
+    }
+
+    </script>
+
+  <!-- side panel -->
   <div id="panel">
       <div>
-      <b>Oakland Neighborhoods</b.
+      <b>Select Features</b.
       <p type="text" id="crimes" /> 
       </div>
       <div>
-        <input type="range" id="year_slider" min="2009" max="2014" step="1" value="2009"
-            onchange="show_year();"> <br>
+        <!-- <input type="range" id="year_slider" min="2009" max="2014" step="1" value="2009" -->
+            <!-- onchange="show_year();"> <br> -->
+            <!-- checkbox -->
+            Feature0: <input type="checkbox" id="cb00">
+            Feature1: <input type="checkbox" id="cb01">
+            Feature2: <input type="checkbox" id="cb02">
+            <button onclick="myFunction()">Go!</button>
+            <p id="results"></p>
+
+
         <p class="year">Year: <span id="year" value="2009"></span></p>
       </div>
     <div id="chart_div_one"></div>
