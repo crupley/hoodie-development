@@ -45,13 +45,13 @@ def fun(g):
 
 if __name__ == '__main__':
 
-	#gs = pickle.load(open('g8.pkl', 'rb'))
-	files = [f for f in os.listdir('results/graphs') if f[-2:] == 'gt']
-	gs = map(lambda x: load_graph('results/graphs/' + x), files)
+    #gs = pickle.load(open('g8.pkl', 'rb'))
+    files = [f for f in os.listdir('results/graphs') if f[-2:] == 'gt']
+    gs = map(lambda x: load_graph('results/graphs/' + x), files)
 
     # parallel version
-	# p = Pool()
-	# outputs = p.map(fun, gs)
+    # p = Pool()
+    # outputs = p.map(fun, gs)
 
     # serial version
     for g in gs:
