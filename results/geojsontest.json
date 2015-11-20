@@ -299,7 +299,8 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "#e41a1c"
+        "color": "#e41a1c",
+        "mapno": "010405"
       }
     },
     {
@@ -604,7 +605,8 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "#825274"
+        "color": "#825274",
+        "mapno": "010406"
       }
     },
     {
@@ -881,7 +883,8 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "#3a84aa"
+        "color": "#3a84aa",
+        "mapno": "010405"
       }
     },
     {
@@ -1120,7 +1123,8 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "#46a06c"
+        "color": "#46a06c",
+        "mapno": "010406"
       }
     },
     {
@@ -1341,7 +1345,8 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "#639364"
+        "color": "#639364",
+        "mapno": "010405"
       }
     },
     {
@@ -1542,7 +1547,8 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "#8d5c96"
+        "color": "#8d5c96",
+        "mapno": "010406"
       }
     },
     {
@@ -1711,7 +1717,8 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "#c3635f"
+        "color": "#c3635f",
+        "mapno": "010405"
       }
     },
     {
@@ -1964,7 +1971,8 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "#ff8101"
+        "color": "#ff8101",
+        "mapno": "010406"
       }
     },
     {
@@ -2253,7 +2261,8 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "#ffc91e"
+        "color": "#ffc91e",
+        "mapno": "010405"
       }
     },
     {
@@ -2502,7 +2511,8 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "#f2e631"
+        "color": "#f2e631",
+        "mapno": "010406"
       }
     },
     {
@@ -2683,7 +2693,8 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "#c0872b"
+        "color": "#c0872b",
+        "mapno": "010405"
       }
     },
     {
@@ -2852,7 +2863,8 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "#bf6356"
+        "color": "#bf6356",
+        "mapno": "010406"
       }
     },
     {
@@ -3045,7 +3057,8 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "#ed7bab"
+        "color": "#ed7bab",
+        "mapno": "010405"
       }
     },
     {
@@ -3098,7 +3111,8 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "#ce8bae"
+        "color": "#ce8bae",
+        "mapno": "010406"
       }
     },
     {
@@ -3131,7 +3145,8 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "#999999"
+        "color": "#999999",
+        "mapno": "010405"
       }
     }
   ]

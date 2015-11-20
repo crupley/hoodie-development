@@ -74,8 +74,16 @@ function initMap() {
 
   // set polygon properties
   map.data.setStyle(function(feature){
-    fillColor: feature.getProperty('color')
+    var color = feature.getProperty('color')
+    return {
+      fillColor: color
+    }
   });
+
+  // Hide the Data layer.
+  // map.data.setStyle({
+  //   visible: false
+  // });
 }
 
     </script>
