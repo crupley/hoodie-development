@@ -87,7 +87,9 @@ def make_polys(df):
         points = geometry.MultiPoint(zip(groupn.lon, groupn.lat))
         if len(points) > 2:
             polygon, edge_points = alpha_shape(points, alpha=300)
-            polys.append(polygon)
+        else:
+            polygon = points
+        polys.append(polygon)
     return polys
 
 def make_kml(polys, filename):
