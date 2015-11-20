@@ -4,6 +4,8 @@ import pandas as pd
 import networkx as nx
 import os
 
+from sklearn.metrics.pairwise import pairwise_distances
+
 from code.featurize import fdist
 
 
@@ -154,3 +156,12 @@ def feature_bars(featuredf, cnum, **kwargs):
 	
 	df.T.plot(kind='bar', subplots=True, sharey=True, **kwargs)
 
+
+def most_similar(featuredf, cluster_labels, cluster_number):
+	'''
+	returns feature distance from cluster_number to all others
+	'''
+	cluster_means = featuredf.groupby(cluster_labels).mean()
+	df =  pd.DataFrame(pairwise_distances(cluster_means),
+						metric='l2')
+	return df[cluster_number]
