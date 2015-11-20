@@ -299,7 +299,7 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "red"
+        "color": "#e41a1c"
       }
     },
     {
@@ -604,7 +604,7 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "red"
+        "color": "#825274"
       }
     },
     {
@@ -881,7 +881,7 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "red"
+        "color": "#3a84aa"
       }
     },
     {
@@ -1120,7 +1120,7 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "red"
+        "color": "#46a06c"
       }
     },
     {
@@ -1341,7 +1341,7 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "red"
+        "color": "#639364"
       }
     },
     {
@@ -1542,7 +1542,7 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "red"
+        "color": "#8d5c96"
       }
     },
     {
@@ -1711,7 +1711,7 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "red"
+        "color": "#c3635f"
       }
     },
     {
@@ -1964,7 +1964,7 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "red"
+        "color": "#ff8101"
       }
     },
     {
@@ -2253,7 +2253,7 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "red"
+        "color": "#ffc91e"
       }
     },
     {
@@ -2502,7 +2502,7 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "red"
+        "color": "#f2e631"
       }
     },
     {
@@ -2683,7 +2683,7 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "red"
+        "color": "#c0872b"
       }
     },
     {
@@ -2852,7 +2852,7 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "red"
+        "color": "#bf6356"
       }
     },
     {
@@ -3045,7 +3045,7 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "red"
+        "color": "#ed7bab"
       }
     },
     {
@@ -3098,7 +3098,7 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "red"
+        "color": "#ce8bae"
       }
     },
     {
@@ -3131,7 +3131,7 @@
       },
       "type": "Feature",
       "properties": {
-        "color": "red"
+        "color": "#999999"
       }
     }
   ]

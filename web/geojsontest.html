@@ -22,15 +22,24 @@
 var map;
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 4,
+    zoom: 12,
     // center: {lat: -28, lng: 137} //aus
     center: {lat: 37.762, lng: -122.44}, //SF
   });
 
+  // load geojson
   // NOTE: This uses cross-domain XHR, and may not work on older browsers.
   // map.data.loadGeoJson('https://storage.googleapis.com/maps-devrel/google.json');
   map.data.loadGeoJson('https://raw.githubusercontent.com/crupley/hoodie/master/results/geojsontest.json');
   // map.data.loadGeoJson('file:/google.json');
+
+  // set polygon properties
+  map.data.setStyle(function(feature){
+    var color = feature.getProperty('color');
+    return {
+      fillColor: color
+    };
+  });
 }
 
     </script>
