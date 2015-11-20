@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Simple Map</title>
+    <title>hoodie SF</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <style>
@@ -14,14 +14,6 @@
         height: 100%;
       }
       #panel {
-/*        position: absolute;
-        top: 50px;
-        left: 10px;
-        margin: 0px;
-        z-index: 5;
-        background-color: #fff;
-        padding: 5px;
-        border: 1px solid #999;*/
 
         /*copied from map style*/
         direction: ltr;
@@ -183,19 +175,19 @@ function initMap() {
             </select><br>
             <hr>
             <!-- checkbox -->
-            Feature0: <input type="checkbox" id="cb00"><br>
-            Feature1: <input type="checkbox" id="cb01"><br>
-            Feature2: <input type="checkbox" id="cb02"><br>
-            Feature3: <input type="checkbox" id="cb03"><br>
-            Feature4: <input type="checkbox" id="cb04"><br>
-            Feature5: <input type="checkbox" id="cb05"><br>
-            Feature6: <input type="checkbox" id="cb06"><br>
-            Feature7: <input type="checkbox" id="cb07"><br>
-            Feature8: <input type="checkbox" id="cb08"><br>
+            Property Value: <input type="checkbox" id="cb00"><br>
+            Grocery Stores: <input type="checkbox" id="cb01"><br>
+            Restaurants: <input type="checkbox" id="cb02"><br>
+            Retail Stores: <input type="checkbox" id="cb03"><br>
+            Crime: <input type="checkbox" id="cb04"><br>
+            Gender: <input type="checkbox" id="cb05"><br>
+            Household Size: <input type="checkbox" id="cb06"><br>
+            Population: <input type="checkbox" id="cb07"><br>
+            Walkscore: <input type="checkbox" id="cb08"><br>
             <br>
             <button onclick="myFunction()">Draw Neighborhoods</button><br>
             <br>
-            nchecked: <p id="results"></p>
+            Selected: <p id="results"></p>
             <!-- joe's jq
             $(“checkbox”).hover(function(e){
               e.preventDefault():
@@ -203,9 +195,8 @@ function initMap() {
             }); -->
 
 
-        <p class="year">Year: <span id="year" value="2009"></span></p>
+        <!-- <p class="year">Year: <span id="year" value="2009"></span></p> -->
       </div>
-    <!--Div that will hold the pie chart-->
     <div id="chart_div" style="width:100; height:100"></div>
     <p align="left">Most Similar:</p>
     <div id="similar">s1, s2</div>
