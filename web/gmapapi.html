@@ -74,10 +74,7 @@ function initMap() {
 
   // set polygon properties
   map.data.setStyle(function(feature){
-    var color = feature.getProperty('color');
-    return {
-      fillColor: color
-    };
+    fillColor: feature.getProperty('color')
   });
 }
 
@@ -165,7 +162,7 @@ function initMap() {
             Feature7: <input type="checkbox" id="cb07"><br>
             Feature8: <input type="checkbox" id="cb08"><br>
             <br>
-            <button onclick="myFunction()">Go!</button><br>
+            <button onclick="myFunction()">Draw Neighborhoods</button><br>
             <br>
             nchecked: <p id="results"></p>
             <!-- joe's jq
