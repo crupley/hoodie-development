@@ -141,7 +141,7 @@ def cut2cluster(featurelist, nclusters):
 	# assign cluster numbers
 	return assign_clusters(nodelist, graph)
 
-def feature_bars(featuredf, cnum, **kwargs):
+def feature_bars(featuredf, cnum, plot=False, **kwargs):
 	'''
 	barplot of features grouped by cluster number
 	'''
@@ -154,7 +154,10 @@ def feature_bars(featuredf, cnum, **kwargs):
 	df = df.div(df.max(axis=0))
 	df = df.sub(df.mean(axis=0))
 	
-	df.T.plot(kind='bar', subplots=True, sharey=True, **kwargs)
+	if plot:
+		df.T.plot(kind='bar', subplots=True, sharey=True, **kwargs)
+
+	return df
 
 
 def most_similar(featuredf, cluster_labels, cluster_number):
