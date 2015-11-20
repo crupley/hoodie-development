@@ -27,7 +27,8 @@ function initMap() {
   });
 
   // NOTE: This uses cross-domain XHR, and may not work on older browsers.
-  map.data.loadGeoJson('https://storage.googleapis.com/maps-devrel/google.json');
+  // map.data.loadGeoJson('https://storage.googleapis.com/maps-devrel/google.json');
+  map.data.loadGeoJson('https://raw.githubusercontent.com/crupley/hoodie/master/results/geojsontest.json');
   // map.data.loadGeoJson('file:/google.json');
 }
 
