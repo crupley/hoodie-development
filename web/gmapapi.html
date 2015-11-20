@@ -63,34 +63,14 @@ function initMap() {
   var map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 37.762, lng: -122.44}, //SF
     zoom: 12
-    //mapTypeControlOptions: {
-    //  mapTypeIds: [google.maps.MapTypeId.ROADMAP, customMapTypeId]
-    //}
   });
-  // var kmlLayer = new google.maps.KmlLayer({
-  //   url: 'https://github.com/crupley/hoodie/raw/master/results/gall.kml',
-  //   map: map
-  // });
-
-  // kmlLayer.addListener('click', function(kmlEvent) {
-  //   var text = kmlEvent.featureData.description;
-  //   showInContentWindow(text);
-  // });
-
-  // function showInContentWindow(text) {
-  //   var sidediv = document.getElementById('content-window');
-  //   sidediv.innerHTML = text;
-  // }
 
   // more style
   map.mapTypes.set(customMapTypeId, customMapType);
   map.setMapTypeId(customMapTypeId);
 
   // load geojson
-  // NOTE: This uses cross-domain XHR, and may not work on older browsers.
-  // map.data.loadGeoJson('https://storage.googleapis.com/maps-devrel/google.json');
   map.data.loadGeoJson('https://raw.githubusercontent.com/crupley/hoodie/master/results/geojsontest.json');
-  // map.data.loadGeoJson('file:/google.json');
 
   // set polygon properties
   map.data.setStyle(function(feature){
