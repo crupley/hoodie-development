@@ -86,7 +86,8 @@ function initMap() {
 
     // Redraw chart on mouseover, given year from slider:
     // var year = document.getElementById("year_slider").value;
-    drawChart(event.feature.getProperty('feature_values'));
+    document.getElementById("results").innerHTML = event.feature.getProperty('neibno')
+    drawChart(event.feature.getProperty('bars'));
 
   });
 
@@ -128,17 +129,16 @@ function initMap() {
       // Callback that creates and populates a data table,
       // instantiates the pie chart, passes in the data and
       // draws it.
-      function drawChart(data) {
+      function drawChart(chart_data) {
 
         // Create the data table.
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Feature');
         data.addColumn('number', 'Value');
-        data.addRows([
-          ['Mushrooms', 2],
-          ['Onions', 1],
-          ['Olives', -2]
-        ]);
+        data.addRows(chart_data)
+        // data.addRows([['one', chart_data],
+        //               ['two', 2],
+        //               ['three', 3]]);
 
         // Set chart options
         var options = {'title':'Features',
