@@ -10,6 +10,35 @@ from sklearn.metrics.pairwise import pairwise_distances
 from code.featurize import fdist
 
 
+FDICT = {0: 'taxable_value',
+         1: 'grocery',
+         2: 'restaurant',
+         3: 'retail',
+         4: 'ncrimes',
+         5: 'sgnf',
+         6: 'avg_hh_size',
+         7: 'population',
+         8: 'walkscore'}
+
+FNAMES = {'taxable_value': 'Property Value',
+		  'grocery': 'Grocery',
+		  'restaurant': 'Restaurants',
+		  'retail': 'Retail',
+		  'ncrimes': 'Crime',
+		  'sgnf': 'Female:Male ratio',
+		  'avg_hh_size': 'Household Size',
+		  'population': 'Population',
+		  'walkscore': 'Walkscore'}
+
+def mapno2list(s):
+	return [int(s[i] + s[i+1]) for i in range(len(s)) if i%2 == 0]
+
+
+def list2mapno(featurenumlist):
+	f = tuple(featurenumlist)
+	return '%02d' * len(f) % f
+
+
 def bigsize(row):
 	'''
 	calculate biggest cluster in graph after each cut
@@ -180,8 +209,11 @@ def gencolors(n, cmap='jet'):
 def list_(*args): return list(args)
 
 
-def make_json(cnum, polys, clist, mapnos, fnames, fbars):
-	# all polygons
+def make_json(cnum, polys, clist, mapno, fbars):
+	
+	fnames
+
+
 	featurelist = []
 	for i, poly in enumerate(polys):
 	    featurelist.append({"type": "Feature",
