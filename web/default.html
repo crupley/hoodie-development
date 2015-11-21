@@ -154,7 +154,20 @@ function initMap() {
       var x06 = document.getElementById("cb06");
       var x07 = document.getElementById("cb07");
       var x08 = document.getElementById("cb08");
-      document.getElementById("results").innerHTML = x00.checked + x01.checked + x02.checked + x03.checked + x04.checked + x05.checked + x06.checked + x07.checked + x08.checked;
+      var mapno = ""
+
+      if (x00.checked) {mapno = mapno.concat('00')}
+      if (x01.checked) {mapno = mapno.concat('01')}
+      if (x02.checked) {mapno = mapno.concat('02')}
+      if (x03.checked) {mapno = mapno.concat('03')}
+      if (x04.checked) {mapno = mapno.concat('04')}
+      if (x05.checked) {mapno = mapno.concat('05')}
+      if (x06.checked) {mapno = mapno.concat('06')}
+      if (x07.checked) {mapno = mapno.concat('07')}
+      if (x08.checked) {mapno = mapno.concat('08')}
+
+      document.getElementById("test").innerHTML = mapno
+      // document.getElementById("results").innerHTML = x00.checked + x01.checked + x02.checked + x03.checked + x04.checked + x05.checked + x06.checked + x07.checked + x08.checked;
     }
 
     </script>
@@ -189,6 +202,8 @@ function initMap() {
             <button onclick="myFunction()">Draw Neighborhoods</button><br>
             <br>
             Selected: <p id="results"></p>
+            <br>
+            test: <p id="test"></p>
             <!-- joe's jq
             $(“checkbox”).hover(function(e){
               e.preventDefault():
