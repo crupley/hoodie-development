@@ -144,7 +144,7 @@ function initMap() {
       }
     </script>
     <script>
-    function myFunction() {
+    function setMapno() {
       var x00 = document.getElementById("cb00");
       var x01 = document.getElementById("cb01");
       var x02 = document.getElementById("cb02");
@@ -167,7 +167,6 @@ function initMap() {
       if (x08.checked) {mapno = mapno.concat('08')}
 
       document.getElementById("test").innerHTML = mapno
-      // document.getElementById("results").innerHTML = x00.checked + x01.checked + x02.checked + x03.checked + x04.checked + x05.checked + x06.checked + x07.checked + x08.checked;
     }
 
     </script>
@@ -189,17 +188,18 @@ function initMap() {
             </select><br>
             <hr>
             <!-- checkbox -->
-            Property Value: <input type="checkbox" id="cb00"><br>
-            Grocery Stores: <input type="checkbox" id="cb01"><br>
-            Restaurants: <input type="checkbox" id="cb02"><br>
-            Retail Stores: <input type="checkbox" id="cb03"><br>
-            Crime: <input type="checkbox" id="cb04"><br>
-            Gender: <input type="checkbox" id="cb05"><br>
-            Household Size: <input type="checkbox" id="cb06"><br>
-            Population: <input type="checkbox" id="cb07"><br>
-            Walkscore: <input type="checkbox" id="cb08"><br>
-            <br>
-            <button onclick="myFunction()">Draw Neighborhoods</button><br>
+            <p align="right">
+              Property Value: <input type="checkbox" id="cb00"><br>
+              Grocery Stores: <input type="checkbox" id="cb01"><br>
+              Restaurants: <input type="checkbox" id="cb02"><br>
+              Retail Stores: <input type="checkbox" id="cb03"><br>
+              Crime: <input type="checkbox" id="cb04"><br>
+              Gender: <input type="checkbox" id="cb05"><br>
+              Household Size: <input type="checkbox" id="cb06"><br>
+              Population: <input type="checkbox" id="cb07"><br>
+              Walkscore: <input type="checkbox" id="cb08"><br>
+            </p>
+            <button onclick="setMapno()">Draw Neighborhoods</button><br>
             <br>
             Selected: <p id="results"></p>
             <br>
