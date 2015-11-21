@@ -3,10 +3,40 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 import os
+import matplotlib
 
 from sklearn.metrics.pairwise import pairwise_distances
 
 from code.featurize import fdist
+
+
+FDICT = {0: 'taxable_value',
+         1: 'grocery',
+         2: 'restaurant',
+         3: 'retail',
+         4: 'ncrimes',
+         5: 'sgnf',
+         6: 'avg_hh_size',
+         7: 'population',
+         8: 'walkscore'}
+
+FNAMES = {'taxable_value': 'Property Value',
+		  'grocery': 'Grocery',
+		  'restaurant': 'Restaurants',
+		  'retail': 'Retail',
+		  'ncrimes': 'Crime',
+		  'sgnf': 'Female:Male ratio',
+		  'avg_hh_size': 'Household Size',
+		  'population': 'Population',
+		  'walkscore': 'Walkscore'}
+
+def mapno2list(s):
+	return [int(s[i] + s[i+1]) for i in range(len(s)) if i%2 == 0]
+
+
+def list2mapno(featurenumlist):
+	f = tuple(featurenumlist)
+	return '%02d' * len(f) % f
 
 
 def bigsize(row):
@@ -168,3 +198,36 @@ def most_similar(featuredf, cluster_labels, cluster_number):
 	df =  pd.DataFrame(pairwise_distances(cluster_means),
 						metric='l2')
 	return df[cluster_number]
+
+
+def gencolors(n, cmap='jet'):
+	c = matplotlib.cm.get_cmap('Set1')
+	clist = [matplotlib.colors.rgb2hex(rgb) for rgb in c(np.linspace(0,1,n))]
+	return clist
+
+
+def list_(*args): return list(args)
+
+
+def make_json(cnum, polys, clist, mapno, fbars):
+	
+	fnames
+
+
+	featurelist = []
+	for i, poly in enumerate(polys):
+	    featurelist.append({"type": "Feature",
+	                        "properties": {
+	                        "color": clist[i],
+	                        "mapno": mapnos[i],
+	                        "neibno": i,
+	                        "bars" : map(list_, fnames, fbars.ix[i].values.tolist()),
+	                        "visible": false
+	                        },
+	                        "geometry": mapping(poly)
+	                        })
+	    
+	geojson = {"type": "FeatureCollection",
+	           "features": featurelist}
+
+	return geojson
