@@ -180,7 +180,7 @@ def gencolors(n, cmap='jet'):
 def list_(*args): return list(args)
 
 
-def make_json(polys, clist, mapnos, fnames, fbars):
+def make_json(cnum, polys, clist, mapnos, fnames, fbars):
 	# all polygons
 	featurelist = []
 	for i, poly in enumerate(polys):
@@ -189,7 +189,8 @@ def make_json(polys, clist, mapnos, fnames, fbars):
 	                        "color": clist[i],
 	                        "mapno": mapnos[i],
 	                        "neibno": i,
-	                        "bars" : map(list_, fnames, fbars.ix[i].values.tolist())
+	                        "bars" : map(list_, fnames, fbars.ix[i].values.tolist()),
+	                        "visible": false
 	                        },
 	                        "geometry": mapping(poly)
 	                        })
