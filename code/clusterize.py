@@ -8,6 +8,7 @@ import matplotlib
 from sklearn.metrics.pairwise import pairwise_distances
 
 from code.featurize import fdist
+from code.shapefiles import merge_shapefiles, make_shapefiles
 
 
 FDICT = {0: 'taxable_value',
@@ -37,6 +38,11 @@ def mapno2list(s):
 def list2mapno(featurenumlist):
 	f = tuple(featurenumlist)
 	return '%02d' * len(f) % f
+
+
+def mapno2fname(s):
+	featurenumlist = mapno2list(s)
+	return [FDICT[i] for i in featurenumlist]
 
 
 def bigsize(row):
@@ -211,7 +217,7 @@ def list_(*args): return list(args)
 
 def make_json(cnum, polys, clist, mapno, fbars):
 	
-	fnames
+	fnames = [FDICT[n] for n in mapno2list(mapno)]
 
 
 	featurelist = []
@@ -231,3 +237,39 @@ def make_json(cnum, polys, clist, mapno, fbars):
 	           "features": featurelist}
 
 	return geojson
+
+
+def merge_map_data(path, featuredf):
+	files = os.listdir(path)
+	files = [f[2:-4] for f in files if f[:2] == 'CL']
+	files.remove('xx')
+	files.remove('000406')
+	fnames = [mapno2list(f) for f in files]
+
+
+
+	nclusters = 25
+
+	# make null map
+	clist = gencolors(nclusters)
+	cnum = cut2cluster('xx', nclusters)
+	fbars = feature_bars(featuredf[FDICT.values()], cnum)
+
+
+	featuredf = featuredf.ix[cnum.index]
+	fn = 'data/uscensus/tl_2010_06075_tabblock10/tl_2010_06075_tabblock10.dbf'
+	mergedf = merge_shapefiles(featuredf[['lat', 'lon']], fn)
+	polys = make_shapefiles(featuredf[['lat', 'lon']], mergedf.polys, cnum)
+
+	alldf = pd.DataFrame({'cnum': cnum.unique(),
+                      'polygon': polys})
+	alldf['color'] = clist
+	alldf['mapno'] = ''
+	alldf['fbars'] = map(list, fbars.round(2).values)
+
+
+	return alldf
+
+
+
+
