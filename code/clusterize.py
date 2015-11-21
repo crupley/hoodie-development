@@ -271,7 +271,7 @@ def merge_map_data(path, featuredf):
 
 	for i, f in enumerate(files[:2]):
 		print f
-		cnum = cut2cluster('xx', nclusters)
+		cnum = cut2cluster(f, nclusters)
 		fbars = feature_bars(featuredf[fnames[i]], cnum)
 		polys = make_shapefiles(featuredf[['lat', 'lon']],
 								mergedf.polys, cnum)

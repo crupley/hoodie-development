@@ -69,7 +69,8 @@ function initMap() {
   map.data.setStyle(function(feature){
     var color = feature.getProperty('color')
     return {
-      fillColor: color
+      fillColor: color,
+      visible: false
     }
   });
 
