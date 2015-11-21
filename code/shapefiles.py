@@ -92,7 +92,15 @@ def make_shapefiles(latlon, polys, cnum):
 	    group = shapely.ops.cascaded_union(list(sub))
 	    neibs.append(group.union(cxpolys[i]))
 
-	return neibs
+	# eliminate overlaps
+	fneibs = []
+	ln = len(neibs)
+	for i in range(ln):
+	    fneibs.append(neibs[i])
+	    for j in range(i+1, ln):
+	        fneibs[i] = fneibs[i].difference(neibs[j])
+
+	return fneibs
 
 def list_(*args): return list(args)
 
