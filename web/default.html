@@ -52,7 +52,7 @@ function initMap() {
   var customMapTypeId = 'custom_style';
 
   //initiate map
-  var map = new google.maps.Map(document.getElementById('map'), {
+  map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 37.762, lng: -122.44}, //SF
     zoom: 12
   });
@@ -89,21 +89,67 @@ function initMap() {
   //   visible: false
   // });
 
+
+
+  
+}
+function setMapno() {
+  var x00 = document.getElementById("cb00");
+  var x01 = document.getElementById("cb01");
+  var x02 = document.getElementById("cb02");
+  var x03 = document.getElementById("cb03");
+  var x04 = document.getElementById("cb04");
+  var x05 = document.getElementById("cb05");
+  var x06 = document.getElementById("cb06");
+  var x07 = document.getElementById("cb07");
+  var x08 = document.getElementById("cb08");
+  var mapno = ""
+
+  if (x00.checked) {mapno = mapno.concat('00')}
+  if (x01.checked) {mapno = mapno.concat('01')}
+  if (x02.checked) {mapno = mapno.concat('02')}
+  if (x03.checked) {mapno = mapno.concat('03')}
+  if (x04.checked) {mapno = mapno.concat('04')}
+  if (x05.checked) {mapno = mapno.concat('05')}
+  if (x06.checked) {mapno = mapno.concat('06')}
+  if (x07.checked) {mapno = mapno.concat('07')}
+  if (x08.checked) {mapno = mapno.concat('08')}
+
+  document.getElementById("test").innerHTML = mapno
+
+  // map.data.revertStyle()
   // set style according to mapno (make only this map visible)
   // removes all other styles set
-  // map.data.setStyle(function(feature){
-  //   var mapno = feature.getProperty('mapno')
-  //   if (mapno == '010405') {
-  //     return {
-  //       visible: true
-  //     }
-  //   } else { 
-  //     return {
-  //       visible: false
-  //     }
-  //   }
-  // });
-}
+  map.data.setStyle(function(feature){
+    var mapno = feature.getProperty('mapno')
+    var color = feature.getProperty('color')
+    if (mapno == document.getElementById("test").innerHTML) {
+      return {
+        visible: true,
+        fillColor: color
+      }
+    } else { 
+      return {
+        visible: false,
+        fillColor: color
+      }
+    }
+  })
+};
+  // set style according to mapno (make only this map visible)
+  // removes all other styles set
+  map.data.setStyle(function(feature){
+    var mapno = feature.getProperty('mapno')
+    if (mapno == document.getElementById("test").innerHTML) {
+      return {
+        visible: true
+      }
+    } else { 
+      return {
+        visible: false
+      }
+    }
+  });
 
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYqyh-lKoQk0GcE75hO10Kbiv3Rs1sUc8&callback=initMap"
@@ -142,32 +188,8 @@ function initMap() {
         var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
         chart.draw(data, options);
       }
-    </script>
-    <script>
-    function setMapno() {
-      var x00 = document.getElementById("cb00");
-      var x01 = document.getElementById("cb01");
-      var x02 = document.getElementById("cb02");
-      var x03 = document.getElementById("cb03");
-      var x04 = document.getElementById("cb04");
-      var x05 = document.getElementById("cb05");
-      var x06 = document.getElementById("cb06");
-      var x07 = document.getElementById("cb07");
-      var x08 = document.getElementById("cb08");
-      var mapno = ""
 
-      if (x00.checked) {mapno = mapno.concat('00')}
-      if (x01.checked) {mapno = mapno.concat('01')}
-      if (x02.checked) {mapno = mapno.concat('02')}
-      if (x03.checked) {mapno = mapno.concat('03')}
-      if (x04.checked) {mapno = mapno.concat('04')}
-      if (x05.checked) {mapno = mapno.concat('05')}
-      if (x06.checked) {mapno = mapno.concat('06')}
-      if (x07.checked) {mapno = mapno.concat('07')}
-      if (x08.checked) {mapno = mapno.concat('08')}
 
-      document.getElementById("test").innerHTML = mapno
-    }
 
     </script>
 
