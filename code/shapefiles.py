@@ -102,25 +102,5 @@ def make_shapefiles(latlon, polys, cnum):
 
 	return fneibs
 
-def list_(*args): return list(args)
 
-
-def make_json(polys, clist, mapnos, fnames, fbars):
-	# all polygons
-	featurelist = []
-	for i, poly in enumerate(polys):
-	    featurelist.append({"type": "Feature",
-	                        "properties": {
-	                        "color": clist[i],
-	                        "mapno": mapnos[i],
-	                        "neibno": i,
-	                        "bars" : map(list_, fnames, fbars.ix[i].values.tolist())
-	                        },
-	                        "geometry": mapping(poly)
-	                        })
-	    
-	geojson = {"type": "FeatureCollection",
-	           "features": featurelist}
-
-	return geojson
 

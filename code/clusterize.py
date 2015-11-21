@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 import os
+import matplotlib
 
 from sklearn.metrics.pairwise import pairwise_distances
 
@@ -168,3 +169,32 @@ def most_similar(featuredf, cluster_labels, cluster_number):
 	df =  pd.DataFrame(pairwise_distances(cluster_means),
 						metric='l2')
 	return df[cluster_number]
+
+
+def gencolors(n, cmap='jet'):
+	c = matplotlib.cm.get_cmap('Set1')
+	clist = [matplotlib.colors.rgb2hex(rgb) for rgb in c(np.linspace(0,1,n))]
+	return clist
+
+
+def list_(*args): return list(args)
+
+
+def make_json(polys, clist, mapnos, fnames, fbars):
+	# all polygons
+	featurelist = []
+	for i, poly in enumerate(polys):
+	    featurelist.append({"type": "Feature",
+	                        "properties": {
+	                        "color": clist[i],
+	                        "mapno": mapnos[i],
+	                        "neibno": i,
+	                        "bars" : map(list_, fnames, fbars.ix[i].values.tolist())
+	                        },
+	                        "geometry": mapping(poly)
+	                        })
+	    
+	geojson = {"type": "FeatureCollection",
+	           "features": featurelist}
+
+	return geojson
