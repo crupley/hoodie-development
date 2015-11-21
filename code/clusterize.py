@@ -269,6 +269,10 @@ def merge_map_data(path, featuredf):
 	alldf['mapno'] = ''
 	alldf['fbars'] = map(list, fbars.round(2).values)
 
+	# store results
+	alldf.to_csv('results/alldf.csv')
+
+	# make all other maps
 	for i, f in enumerate(files[:2]):
 		print f
 		cnum = cut2cluster(f, nclusters)
@@ -278,9 +282,13 @@ def merge_map_data(path, featuredf):
 
 		onedf = pd.DataFrame({'cnum': cnum.unique(),
                       'polygon': polys})
+
 		onedf['color'] = clist
 		onedf['mapno'] = f
 		onedf['fbars'] = map(list, fbars.round(2).values)
+
+		with open('results/alldf.csv', 'a') as storefile:
+		    onedf.to_csv(storefile, header=False)
 
 		alldf = pd.concat((alldf, onedf), axis=0)
 
