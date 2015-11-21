@@ -136,20 +136,6 @@ function setMapno() {
     }
   })
 };
-  // set style according to mapno (make only this map visible)
-  // removes all other styles set
-  map.data.setStyle(function(feature){
-    var mapno = feature.getProperty('mapno')
-    if (mapno == document.getElementById("test").innerHTML) {
-      return {
-        visible: true
-      }
-    } else { 
-      return {
-        visible: false
-      }
-    }
-  });
 
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYqyh-lKoQk0GcE75hO10Kbiv3Rs1sUc8&callback=initMap"
