@@ -6,6 +6,7 @@ import os
 import matplotlib
 
 from sklearn.metrics.pairwise import pairwise_distances
+from shapely.geometry import mapping
 
 from code.featurize import fdist
 from code.shapefiles import merge_shapefiles, make_shapefiles
@@ -217,20 +218,21 @@ def list_(*args): return list(args)
 
 def make_json(cnum, polys, clist, mapno, fbars):
 	
-	fnames = [FDICT[n] for n in mapno2list(mapno)]
+	fnames = map(lambda x: [FDICT[n] for n in mapno2list(x)], mapno)
 
 
 	featurelist = []
-	for i, poly in enumerate(polys):
+	for i in xrange(len(cnum)):
 	    featurelist.append({"type": "Feature",
 	                        "properties": {
-	                        "color": clist[i],
-	                        "mapno": mapnos[i],
-	                        "neibno": i,
-	                        "bars" : map(list_, fnames, fbars.ix[i].values.tolist()),
-	                        "visible": false
+	                        "color": clist.iloc[i],
+	                        "mapno": mapno.iloc[i],
+	                        "neibno": cnum.iloc[i],
+	                        "bars" : map(list_, fnames[i],
+	                        			 fbars.iloc[i]),
+	                        "visible": False
 	                        },
-	                        "geometry": mapping(poly)
+	                        "geometry": mapping(polys.iloc[i])
 	                        })
 	    
 	geojson = {"type": "FeatureCollection",
@@ -266,6 +268,23 @@ def merge_map_data(path, featuredf):
 	alldf['color'] = clist
 	alldf['mapno'] = ''
 	alldf['fbars'] = map(list, fbars.round(2).values)
+
+	for i, f in enumerate(files[:2]):
+		print f
+		cnum = cut2cluster('xx', nclusters)
+		fbars = feature_bars(featuredf[fnames[i]], cnum)
+		polys = make_shapefiles(featuredf[['lat', 'lon']],
+								mergedf.polys, cnum)
+
+		onedf = pd.DataFrame({'cnum': cnum.unique(),
+                      'polygon': polys})
+		onedf['color'] = clist
+		onedf['mapno'] = f
+		onedf['fbars'] = map(list, fbars.round(2).values)
+
+		alldf = pd.concat((alldf, onedf), axis=0)
+
+
 
 
 	return alldf
