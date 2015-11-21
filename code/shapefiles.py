@@ -90,7 +90,8 @@ def make_shapefiles(latlon, polys, cnum):
 	for i, c in enumerate(cnum.unique()):
 	    sub = parr[(np.array(cnum) == c) & (np.array(validbool))]
 	    group = shapely.ops.cascaded_union(list(sub))
-	    neibs.append(group.union(cxpolys[i]))
+	    # neibs.append(group.union(cxpolys[i]))
+	    neibs.append(group)
 
 	# eliminate overlaps
 	fneibs = []
