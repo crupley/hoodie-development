@@ -14,7 +14,6 @@
         height: 100%;
       }
       #panel {
-
         /*copied from map style*/
         direction: ltr;
         overflow: hidden;
@@ -24,8 +23,7 @@
         -webkit-user-select: none;
         font-size: 11px;
         padding: 8px;
-        border-bottom-left-radius: 2px;
-        border-top-left-radius: 2px;
+        border-radius: 2px;
         -webkit-background-clip: padding-box;
         box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
         min-width: 21px;
@@ -35,214 +33,196 @@
         position: absolute;
         top: 50px;
         left: 10px;
-          }
+      }
+
+      #header {
+
+
+      }
     </style>
   </head>
   <body>
     <div id="map"></div>
-    <script>
+      <script>
+        function initMap() {
 
+          //map stylizing, Subtle Grayscale from Snazzy Maps
+          var customMapType = new google.maps.StyledMapType([{"featureType":"landscape","stylers":[{"saturation":-100},{"lightness":65},{"visibility":"on"}]},{"featureType":"poi","stylers":[{"saturation":-100},{"lightness":51},{"visibility":"simplified"}]},{"featureType":"road.highway","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"road.arterial","stylers":[{"saturation":-100},{"lightness":30},{"visibility":"on"}]},{"featureType":"road.local","stylers":[{"saturation":-100},{"lightness":40},{"visibility":"on"}]},{"featureType":"transit","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"administrative.province","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"labels","stylers":[{"visibility":"on"},{"lightness":-25},{"saturation":-100}]},{"featureType":"water","elementType":"geometry","stylers":[{"hue":"#ffff00"},{"lightness":-25},{"saturation":-97}]}], {
+            name: 'Custom Style'
+          });
+          var customMapTypeId = 'custom_style';
 
-function initMap() {
+          //initiate map
+          map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 37.762, lng: -122.44}, //SF
+            zoom: 12
+          });
 
-  //map stylizing, Subtle Grayscale from Snazzy Maps
-  var customMapType = new google.maps.StyledMapType([{"featureType":"landscape","stylers":[{"saturation":-100},{"lightness":65},{"visibility":"on"}]},{"featureType":"poi","stylers":[{"saturation":-100},{"lightness":51},{"visibility":"simplified"}]},{"featureType":"road.highway","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"road.arterial","stylers":[{"saturation":-100},{"lightness":30},{"visibility":"on"}]},{"featureType":"road.local","stylers":[{"saturation":-100},{"lightness":40},{"visibility":"on"}]},{"featureType":"transit","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"administrative.province","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"labels","stylers":[{"visibility":"on"},{"lightness":-25},{"saturation":-100}]},{"featureType":"water","elementType":"geometry","stylers":[{"hue":"#ffff00"},{"lightness":-25},{"saturation":-97}]}], {
-    name: 'Custom Style'
-  });
-  var customMapTypeId = 'custom_style';
+          // more style
+          map.mapTypes.set(customMapTypeId, customMapType);
+          map.setMapTypeId(customMapTypeId);
 
-  //initiate map
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 37.762, lng: -122.44}, //SF
-    zoom: 12
-  });
+          // load geojson
+          map.data.loadGeoJson('https://raw.githubusercontent.com/crupley/hoodie/master/results/geo.json');
+          // map.data.loadGeoJson('https://raw.githubusercontent.com/crupley/hoodie/master/results/outliers.json');
+          // map.data.loadGeoJson('/geo.json');
 
-  // more style
-  map.mapTypes.set(customMapTypeId, customMapType);
-  map.setMapTypeId(customMapTypeId);
+          // set polygon properties
+          map.data.setStyle(function(feature){
+            var color = feature.getProperty('color')
+            return {
+              fillColor: color,
+              visible: false
+            }
+          });
 
-  // load geojson
-  // map.data.loadGeoJson('https://raw.githubusercontent.com/crupley/hoodie/master/results/geo.json');
-  map.data.loadGeoJson('https://raw.githubusercontent.com/crupley/hoodie/master/results/outliers.json');
-  // map.data.loadGeoJson('/geo.json');
+          map.data.addListener('click', function(event) {
+            map.data.revertStyle();
+            map.data.overrideStyle(event.feature, {strokeWeight: 2, fillColor: '#000000', fillOpacity: 0.3});
 
-  // set polygon properties
-  map.data.setStyle(function(feature){
-    var color = feature.getProperty('color')
-    return {
-      fillColor: color,
-      visible: false
-    }
-  });
+            // Redraw chart on mouseover, given year from slider:
+            // var year = document.getElementById("year_slider").value;
+            document.getElementById("results").innerHTML = event.feature.getProperty('neibno')
+            drawChart(event.feature.getProperty('bars'));
 
-  map.data.addListener('click', function(event) {
-    map.data.revertStyle();
-    map.data.overrideStyle(event.feature, {strokeWeight: 2, fillColor: '#000000', fillOpacity: 0.3});
+          });
 
-    // Redraw chart on mouseover, given year from slider:
-    // var year = document.getElementById("year_slider").value;
-    document.getElementById("results").innerHTML = event.feature.getProperty('neibno')
-    drawChart(event.feature.getProperty('bars'));
+          // Hide the Data layer.
+          // map.data.setStyle({
+          //   visible: false
+          // }); 
+        }
+        function setMapno() {
+          var x00 = document.getElementById("cb00");
+          var x01 = document.getElementById("cb01");
+          var x02 = document.getElementById("cb02");
+          var x03 = document.getElementById("cb03");
+          var x04 = document.getElementById("cb04");
+          var x05 = document.getElementById("cb05");
+          var x06 = document.getElementById("cb06");
+          var x07 = document.getElementById("cb07");
+          var x08 = document.getElementById("cb08");
+          var mapno = ""
 
-  });
+          if (x00.checked) {mapno = mapno.concat('00')}
+          if (x01.checked) {mapno = mapno.concat('01')}
+          if (x02.checked) {mapno = mapno.concat('02')}
+          if (x03.checked) {mapno = mapno.concat('03')}
+          if (x04.checked) {mapno = mapno.concat('04')}
+          if (x05.checked) {mapno = mapno.concat('05')}
+          if (x06.checked) {mapno = mapno.concat('06')}
+          if (x07.checked) {mapno = mapno.concat('07')}
+          if (x08.checked) {mapno = mapno.concat('08')}
 
-  // Hide the Data layer.
-  // map.data.setStyle({
-  //   visible: false
-  // });
+          document.getElementById("test").innerHTML = mapno
 
-
-
-  
-}
-function setMapno() {
-  var x00 = document.getElementById("cb00");
-  var x01 = document.getElementById("cb01");
-  var x02 = document.getElementById("cb02");
-  var x03 = document.getElementById("cb03");
-  var x04 = document.getElementById("cb04");
-  var x05 = document.getElementById("cb05");
-  var x06 = document.getElementById("cb06");
-  var x07 = document.getElementById("cb07");
-  var x08 = document.getElementById("cb08");
-  var mapno = ""
-
-  if (x00.checked) {mapno = mapno.concat('00')}
-  if (x01.checked) {mapno = mapno.concat('01')}
-  if (x02.checked) {mapno = mapno.concat('02')}
-  if (x03.checked) {mapno = mapno.concat('03')}
-  if (x04.checked) {mapno = mapno.concat('04')}
-  if (x05.checked) {mapno = mapno.concat('05')}
-  if (x06.checked) {mapno = mapno.concat('06')}
-  if (x07.checked) {mapno = mapno.concat('07')}
-  if (x08.checked) {mapno = mapno.concat('08')}
-
-  document.getElementById("test").innerHTML = mapno
-
-  // map.data.revertStyle()
-  // set style according to mapno (make only this map visible)
-  // removes all other styles set
-  map.data.setStyle(function(feature){
-    var mapno = feature.getProperty('mapno')
-    var color = feature.getProperty('color')
-    if (mapno == document.getElementById("test").innerHTML) {
-      return {
-        visible: true,
-        fillColor: color
-      }
-    } else { 
-      return {
-        visible: false,
-        fillColor: color
-      }
-    }
-  })
-};
-
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYqyh-lKoQk0GcE75hO10Kbiv3Rs1sUc8&callback=initMap"
-        async defer></script>
-
-    <!-- charts: from google -->
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript">
-
-      // Load the Visualization API and the piechart package.
-      google.load('visualization', '1', {'packages':['corechart']});
-
-      // Set a callback to run when the Google Visualization API is loaded.
-      google.setOnLoadCallback(drawChart);
-
-      // Callback that creates and populates a data table,
-      // instantiates the pie chart, passes in the data and
-      // draws it.
-      function drawChart(chart_data) {
-
-        // Create the data table.
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Feature');
-        data.addColumn('number', 'Value');
-        data.addRows(chart_data)
-        // data.addRows([['one', chart_data],
-        //               ['two', 2],
-        //               ['three', 3]]);
-
-        // Set chart options
-        var options = {
-          'title': 'Selected Features',
-          'width': 150,
-          'height': 150,
-          'legend': { position: "none"},
-          vAxis: {
-            viewWindow: { min: -0.5, max: 0.5},
-            ticks: [
-              3, 
-              { v: -0.5, f: 'Min'},
-              {v: 0, f: 'Avg'}, 
-              {v: 0.5, f: 'Max'}
-            ]
-          }
+          // map.data.revertStyle()
+          // set style according to mapno (make only this map visible)
+          // removes all other styles set
+          map.data.setStyle(function(feature){
+            var mapno = feature.getProperty('mapno')
+            var color = feature.getProperty('color')
+            if (mapno == document.getElementById("test").innerHTML) {
+              return {
+                visible: true,
+                fillColor: color
+              }
+            } else { 
+              return {
+                visible: false,
+                fillColor: color
+              }
+            }
+          })
         };
 
-        // Instantiate and draw our chart, passing in some options.
-        // var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+      </script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYqyh-lKoQk0GcE75hO10Kbiv3Rs1sUc8&callback=initMap"
+          async defer></script>
 
-        chart.draw(data, options);
-      }
+      <!-- charts: from google -->
+      <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+      <script type="text/javascript">
+
+        // Load the Visualization API and the piechart package.
+        google.load('visualization', '1', {'packages':['corechart']});
+
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.setOnLoadCallback(drawChart);
 
 
+        function drawChart(chart_data) {
 
-    </script>
+          // Create the data table.
+          var data = new google.visualization.DataTable();
+          data.addColumn('string', 'Feature');
+          data.addColumn('number', 'Value');
+          data.addRows(chart_data)
 
-  <!-- side panel -->
-  <div id="panel">
-      <div>
-      <b>Select Features</b.
-      <p type="text" id="crimes" /> 
+          // Set chart options
+          var options = {
+            'title': 'Selected Features',
+            'width': 150,
+            'height': 150,
+            'legend': { position: "none"},
+            vAxis: {
+              viewWindow: { min: -0.5, max: 0.5},
+              ticks: [
+                3, 
+                { v: -0.5, f: 'Min'},
+                {v: 0, f: 'Avg'}, 
+                {v: 0.5, f: 'Max'}
+              ]
+            }
+          };
+
+          // Instantiate and draw our chart, passing in some options.
+          // var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+          var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+
+          chart.draw(data, options);
+        }
+      </script>
+
+    <div id="header">
+      <h1>Hello, is it me you're looking for?</h1>
+    </div>
+
+    <!-- side panel -->
+    <div id="panel">
+      <div id="choosetype">
+        <select id="maptype">
+          <option value="neighborhoods">Neighborhoods</option>
+          <option value="data">Data</option>
+        </select>
       </div>
       <div id="Options">
-        <!-- <input type="range" id="year_slider" min="2009" max="2014" step="1" value="2009" -->
-            <!-- onchange="show_year();"> <br> -->
-
-            <select>
-              <option value="data">Data</option>
-              <option value="neighborhoods">Neighborhoods</option>
-              <option value="compare">Compare</option>å
-            </select><br>
-            <hr>
-            <!-- checkbox -->
-            <p align="right">
-              Property Value: <input type="checkbox" id="cb00"><br>
-              Grocery Stores: <input type="checkbox" id="cb01"><br>
-              Restaurants: <input type="checkbox" id="cb02"><br>
-              Retail Stores: <input type="checkbox" id="cb03"><br>
-              Crime: <input type="checkbox" id="cb04"><br>
-              Gender: <input type="checkbox" id="cb05"><br>
-              Household Size: <input type="checkbox" id="cb06"><br>
-              Population: <input type="checkbox" id="cb07"><br>
-              Walkscore: <input type="checkbox" id="cb08"><br>
-            </p>
-            <button onclick="setMapno()">Draw Neighborhoods</button><br>
-            <br>
-            Selected: <p id="results"></p>
-            <br>
-            test: <p id="test"></p>
-            <!-- joe's jq
-            $(“checkbox”).hover(function(e){
-              e.preventDefault():
-              alert(“this has been clicked”);
-            }); -->
-
-
-        <!-- <p class="year">Year: <span id="year" value="2009"></span></p> -->
+        <hr>
+        <b>Select Features:</b>
+        <!-- checkbox -->
+        <p align="right">
+          Property Value: <input type="checkbox" id="cb00"><br>
+          Grocery Stores: <input type="checkbox" id="cb01"><br>
+          Restaurants: <input type="checkbox" id="cb02"><br>
+          Retail Stores: <input type="checkbox" id="cb03"><br>
+          Crime: <input type="checkbox" id="cb04"><br>
+          Gender: <input type="checkbox" id="cb05"><br>
+          Household Size: <input type="checkbox" id="cb06"><br>
+          Population: <input type="checkbox" id="cb07"><br>
+          Walkscore: <input type="checkbox" id="cb08"><br>
+        </p>
+        <button onclick="setMapno()">Draw Neighborhoods</button><br>
+        <br>
+        Selected: <p id="results"></p>
+        <br>
+        test: <p id="test"></p>
+        <!-- joe's jq
+        $(“checkbox”).hover(function(e){
+          e.preventDefault():
+          alert(“this has been clicked”);
+        }); -->
       </div>
-    <div id="chart_div" style="width:150; height:200"></div>
-    <p align="left">Most Similar:</p>
-    <div id="similar">s1, s2</div>
-    <p align="left">Most Different:</p>
-    <div id="different">d1, d2</div>
-    <div id="chart_div_three"></div>
+      <div id="chart_div" style="width:150; height:200"></div>
     </div>
   </body>
 </html>
