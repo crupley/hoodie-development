@@ -197,14 +197,14 @@ def feature_bars(featuredf, cnum, plot=False, **kwargs):
 	return df
 
 
-def most_similar(featuredf, cluster_labels, cluster_number):
+def most_similar(featuredf, cluster_labels):
 	'''
 	returns feature distance from cluster_number to all others
 	'''
 	cluster_means = featuredf.groupby(cluster_labels).mean()
 	df =  pd.DataFrame(pairwise_distances(cluster_means),
 						metric='l2')
-	return df[cluster_number]
+	return df
 
 
 def gencolors(n, cmap='jet'):
