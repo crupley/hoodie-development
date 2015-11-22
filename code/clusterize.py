@@ -297,7 +297,7 @@ def merge_map_data(path, featuredf):
 		with open('results/alldf.csv', 'a') as storefile:
 		    onedf.to_csv(storefile, header=False)
 
-		alldf = pd.concat((alldf, onedf), axis=0)
+		alldf = pd.concat((alldf, onedf), axis=0, ignore_index=True)
 
 
 
