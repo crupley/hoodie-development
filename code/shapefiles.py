@@ -79,8 +79,8 @@ def make_shapefiles(latlon, polys, cnum):
 	
 	with warnings.catch_warnings():
 		warnings.simplefilter('ignore')
-		parr = pd.Series(polys)
-		validbool = map(lambda x: x.is_valid, parr)
+	parr = pd.Series(polys)
+	validbool = map(lambda x: x.is_valid, parr)
 
 	df = latlon.copy()
 	df['cnum'] = cnum

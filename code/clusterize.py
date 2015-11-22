@@ -6,8 +6,10 @@ import os
 import matplotlib
 
 from sklearn.metrics.pairwise import pairwise_distances
+from shapely.geometry import mapping
 
 from code.featurize import fdist
+from code.shapefiles import merge_shapefiles, make_shapefiles
 
 
 FDICT = {0: 'taxable_value',
@@ -37,6 +39,11 @@ def mapno2list(s):
 def list2mapno(featurenumlist):
 	f = tuple(featurenumlist)
 	return '%02d' * len(f) % f
+
+
+def mapno2fname(s):
+	featurenumlist = mapno2list(s)
+	return [FDICT[i] for i in featurenumlist]
 
 
 def bigsize(row):
@@ -211,23 +218,98 @@ def list_(*args): return list(args)
 
 def make_json(cnum, polys, clist, mapno, fbars):
 	
-	fnames
+	# column names
+	fnamesc = map(lambda x: [FDICT[n] for n in mapno2list(x)], mapno)
+
+	# proper names
+	fnames = map(lambda x: [FNAMES[n] for n in x], fnamesc)
 
 
 	featurelist = []
-	for i, poly in enumerate(polys):
+	for i in xrange(len(cnum)):
 	    featurelist.append({"type": "Feature",
 	                        "properties": {
-	                        "color": clist[i],
-	                        "mapno": mapnos[i],
-	                        "neibno": i,
-	                        "bars" : map(list_, fnames, fbars.ix[i].values.tolist()),
-	                        "visible": false
+	                        "color": clist.iloc[i],
+	                        "mapno": mapno.iloc[i],
+	                        "neibno": cnum.iloc[i],
+	                        "bars" : map(list_, fnames[i],
+	                        			 fbars.iloc[i]),
+	                        "visible": False
 	                        },
-	                        "geometry": mapping(poly)
+	                        "geometry": mapping(polys.iloc[i])
 	                        })
 	    
 	geojson = {"type": "FeatureCollection",
 	           "features": featurelist}
 
 	return geojson
+
+
+def merge_map_data(path, featuredf):
+	files = os.listdir(path)
+	files = [f[2:-4] for f in files if f[:2] == 'CL']
+	files.remove('xx')
+
+	# incomplete cut list
+	files.remove('000406')
+
+	mapnos = [f for f in files if len(f) <= 6]
+
+	fnums = [mapno2list(f) for f in mapnos]
+
+	# column names
+	fnames = map(lambda x: [FDICT[n] for n in x], fnums)
+
+
+
+
+	nclusters = 25
+
+	# make null map
+	clist = gencolors(nclusters)
+	cnum = cut2cluster('xx', nclusters)
+	fbars = feature_bars(featuredf[FDICT.values()], cnum)
+
+
+	featuredf = featuredf.ix[cnum.index]
+	fn = 'data/uscensus/tl_2010_06075_tabblock10/tl_2010_06075_tabblock10.dbf'
+	mergedf = merge_shapefiles(featuredf[['lat', 'lon']], fn)
+	polys = make_shapefiles(featuredf[['lat', 'lon']], mergedf.polys, cnum)
+
+	alldf = pd.DataFrame({'cnum': cnum.unique(),
+                      'polygon': polys})
+	alldf['color'] = clist
+	alldf['mapno'] = ''
+	alldf['fbars'] = map(list, fbars.round(2).values)
+
+	# store results
+	alldf.to_csv('results/alldf.csv')
+
+	# make all other maps
+	for i, f in enumerate(mapnos):
+		print f
+		cnum = cut2cluster(f, nclusters)
+		fbars = feature_bars(featuredf[fnames[i]], cnum)
+		polys = make_shapefiles(featuredf[['lat', 'lon']],
+								mergedf.polys, cnum)
+
+		onedf = pd.DataFrame({'cnum': cnum.unique(),
+                      'polygon': polys})
+
+		onedf['color'] = clist
+		onedf['mapno'] = f
+		onedf['fbars'] = map(list, fbars.round(2).values)
+
+		with open('results/alldf.csv', 'a') as storefile:
+		    onedf.to_csv(storefile, header=False)
+
+		alldf = pd.concat((alldf, onedf), axis=0, ignore_index=True)
+
+
+
+
+	return alldf
+
+
+
+
