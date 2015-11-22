@@ -331,7 +331,7 @@ def load_featuredf():
 	fdf = fdf[(fdf.lon < -122.375) | (fdf.lat < 37.805)]
 
 	# exclude piers off Mission Bay
-	fdf = fdf.drop([5662, 6472], axis=0)
+	fdf = fdf.drop([5662, 6742], axis=0)
 
 	return fdf
 
