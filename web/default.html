@@ -174,7 +174,13 @@ function setMapno() {
           'legend': { position: "none"},
           vAxis: {
             viewWindow: { min: -0.5, max: 0.5},
-            textStyle: {color: 'white'}
+            textStyle: {color: 'black'},
+            ticks: [
+              3, 
+              { v: -0.5, f: 'Min'},
+              {v: 0, f: 'Avg'}, 
+              {v: 0.5, f: 'Max'}
+            ]
           }
         };
 
