@@ -249,11 +249,17 @@ def merge_map_data(path, featuredf):
 	files = os.listdir(path)
 	files = [f[2:-4] for f in files if f[:2] == 'CL']
 	files.remove('xx')
+
+	# incomplete cut list
 	files.remove('000406')
 
-	files = [f for f in files if len(f) <= 6]
+	mapnos = [f for f in files if len(f) <= 6]
 
-	fnames = [mapno2list(f) for f in files]
+	fnums = [mapno2list(f) for f in mapnos]
+
+	# column names
+	fnames = map(lambda x: [FDICT[n] for n in x], fnums)
+
 
 
 
@@ -280,7 +286,7 @@ def merge_map_data(path, featuredf):
 	alldf.to_csv('results/alldf.csv')
 
 	# make all other maps
-	for i, f in enumerate(files):
+	for i, f in enumerate(mapnos):
 		print f
 		cnum = cut2cluster(f, nclusters)
 		fbars = feature_bars(featuredf[fnames[i]], cnum)
