@@ -218,7 +218,11 @@ def list_(*args): return list(args)
 
 def make_json(cnum, polys, clist, mapno, fbars):
 	
-	fnames = map(lambda x: [FDICT[n] for n in mapno2list(x)], mapno)
+	# column names
+	fnamesc = map(lambda x: [FDICT[n] for n in mapno2list(x)], mapno)
+
+	# proper names
+	fnames = map(lambda x: [FNAMES[n] for n in x], fnamesc)
 
 
 	featurelist = []
