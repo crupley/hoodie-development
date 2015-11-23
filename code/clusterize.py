@@ -345,4 +345,4 @@ if __name__ == '__main__':
 	gjson = make_json(alldf.cnum, alldf.polygon, alldf.color,
 					  alldf.mapno, alldf.fbars)
 	with open('results/geo.json', 'wb') as f:
-    f.write(json.dumps(gjson))
+		f.write(json.dumps(gjson))
