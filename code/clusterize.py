@@ -4,12 +4,15 @@ import pandas as pd
 import networkx as nx
 import os
 import matplotlib
+import cPickle as pickle
 
 from sklearn.metrics.pairwise import pairwise_distances
 from shapely.geometry import mapping
 
 from code.featurize import fdist
 from code.shapefiles import merge_shapefiles, make_shapefiles
+
+import pdb
 
 
 FDICT = {0: 'taxable_value',
@@ -69,6 +72,7 @@ def cutrow(row, graph):
 	graph.remove_edge(row.source, row.target)
 	return
 
+
 def make_graph(cutdf):
 	g = nx.from_pandas_dataframe(cutdf, 'source', 'target')
 	return g
@@ -95,7 +99,6 @@ def wcss(featuredf, cnum):
     cluster_means = df.groupby('cnum').mean()
     df['errors'] = df.apply(lambda x: row_errorsq(x, cluster_means),
     							axis = 1)
-
     return df.groupby('cnum').sum()['errors']
 
 
@@ -197,14 +200,14 @@ def feature_bars(featuredf, cnum, plot=False, **kwargs):
 	return df
 
 
-def most_similar(featuredf, cluster_labels, cluster_number):
+def most_similar(featuredf, cluster_labels):
 	'''
 	returns feature distance from cluster_number to all others
 	'''
 	cluster_means = featuredf.groupby(cluster_labels).mean()
-	df =  pd.DataFrame(pairwise_distances(cluster_means),
-						metric='l2')
-	return df[cluster_number]
+	df =  pd.DataFrame(pairwise_distances(cluster_means,
+						metric='l2'))
+	return df
 
 
 def gencolors(n, cmap='jet'):
@@ -245,7 +248,7 @@ def make_json(cnum, polys, clist, mapno, fbars):
 	return geojson
 
 
-def merge_map_data(path, featuredf):
+def merge_map_data(path, featuredf, store=False):
 	files = os.listdir(path)
 	files = [f[2:-4] for f in files if f[:2] == 'CL']
 	files.remove('xx')
@@ -254,6 +257,7 @@ def merge_map_data(path, featuredf):
 	files.remove('000406')
 
 	mapnos = [f for f in files if len(f) <= 6]
+	mapnos = ['010405']
 
 	fnums = [mapno2list(f) for f in mapnos]
 
@@ -263,18 +267,25 @@ def merge_map_data(path, featuredf):
 
 
 
-	nclusters = 25
+	nclustersmax = 27
 
-	# make null map
+	### make null map
+	cnum = cut2cluster('xx', nclustersmax)
+
+	# retain only mutual nodes
+	nodelist = set(featuredf.index).intersection(set(cnum.index))
+	featuredf = featuredf.ix[nodelist]
+	cnum = cnum.ix[nodelist]
+	nclusters = len(cnum.unique())
+
 	clist = gencolors(nclusters)
-	cnum = cut2cluster('xx', nclusters)
 	fbars = feature_bars(featuredf[FDICT.values()], cnum)
 
-
-	featuredf = featuredf.ix[cnum.index]
 	fn = 'data/uscensus/tl_2010_06075_tabblock10/tl_2010_06075_tabblock10.dbf'
 	mergedf = merge_shapefiles(featuredf[['lat', 'lon']], fn)
 	polys = make_shapefiles(featuredf[['lat', 'lon']], mergedf.polys, cnum)
+
+	# pdb.set_trace()
 
 	alldf = pd.DataFrame({'cnum': cnum.unique(),
                       'polygon': polys})
@@ -283,12 +294,15 @@ def merge_map_data(path, featuredf):
 	alldf['fbars'] = map(list, fbars.round(2).values)
 
 	# store results
-	alldf.to_csv('results/alldf.csv')
+	if store:
+		alldf.to_csv('results/alldf.csv')
 
 	# make all other maps
 	for i, f in enumerate(mapnos):
 		print f
-		cnum = cut2cluster(f, nclusters)
+		cnum = cut2cluster(f, nclustersmax)
+		cnum = cnum.ix[nodelist]
+
 		fbars = feature_bars(featuredf[fnames[i]], cnum)
 		polys = make_shapefiles(featuredf[['lat', 'lon']],
 								mergedf.polys, cnum)
@@ -300,16 +314,26 @@ def merge_map_data(path, featuredf):
 		onedf['mapno'] = f
 		onedf['fbars'] = map(list, fbars.round(2).values)
 
-		with open('results/alldf.csv', 'a') as storefile:
-		    onedf.to_csv(storefile, header=False)
+		if store:
+			with open('results/alldf.csv', 'a') as storefile:
+			    onedf.to_csv(storefile, header=False)
 
 		alldf = pd.concat((alldf, onedf), axis=0, ignore_index=True)
 
-
-
-
 	return alldf
 
+
+def load_featuredf():
+	with open('featuresdf.pkl', 'rb') as f:
+		fdf = pickle.load(f)
+
+	# exclude Treasure Island
+	fdf = fdf[(fdf.lon < -122.375) | (fdf.lat < 37.805)]
+
+	# exclude piers off Mission Bay
+	fdf = fdf.drop([5662, 6742], axis=0)
+
+	return fdf
 
 
 

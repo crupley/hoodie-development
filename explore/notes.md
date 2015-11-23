@@ -106,7 +106,9 @@
 
 ###Ref
 
-[spatial cluster analysis](https://books.google.com/books?hl=en&lr=&id=4iqX4926x40C&oi=fnd&pg=PA395&dq=geographic+cluster+boundaries&ots=XHZIU6vDXB&sig=r-e74fc7v0jVtuNcz_gb5_xfB7k#v=onepage&q=geographic%20cluster%20boundaries&f=false) - google books
+* [spatial cluster analysis](https://books.google.com/books?hl=en&lr=&id=4iqX4926x40C&oi=fnd&pg=PA395&dq=geographic+cluster+boundaries&ots=XHZIU6vDXB&sig=r-e74fc7v0jVtuNcz_gb5_xfB7k#v=onepage&q=geographic%20cluster%20boundaries&f=false) - google books
+* [hood theory](https://hood.theory.org/) - sf neighborhoods based on housing posts from craigslist
+* [wikipedia](https://en.wikipedia.org/wiki/Neighborhoods_in_San_Francisco) - sf neighborhoods - 36 official
 
 ## Database
 
