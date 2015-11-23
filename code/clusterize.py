@@ -254,7 +254,7 @@ def merge_map_data(path, featuredf, store=False):
 	files.remove('xx')
 
 	# incomplete cut list
-	files.remove('000406')
+	files.remove('000407')
 
 	mapnos = [f for f in files if len(f) <= 6]
 	mapnos = ['010405']
@@ -340,7 +340,7 @@ if __name__ == '__main__':
 	fdf = load_featuredf()
 
 	# may take some time
-	alldf = merge_map_data('results', fdf)
+	alldf = merge_map_data('results', fdf, store=True)
 
 	gjson = make_json(alldf.cnum, alldf.polygon, alldf.color,
 					  alldf.mapno, alldf.fbars)
