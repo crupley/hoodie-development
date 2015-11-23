@@ -111,13 +111,21 @@
           // map.data.loadGeoJson('/geo.json');
 
           // set polygon properties
-          map.data.setStyle(function(feature){
-            var color = feature.getProperty('color')
-            return {
-              fillColor: color,
-              visible: false
+          map.data.setStyle(function(feature) {
+            var color = feature.getProperty("color")
+            if (feature.getProperty("mapno") == "") {
+              return {
+                visible: true,
+                fillColor: color
+              }
+            } else { 
+              return {
+                visible: false,
+                fillColor: color
+              }
             }
-          });
+          })
+          
 
           map.data.addListener('click', function(event) {
             map.data.revertStyle();
