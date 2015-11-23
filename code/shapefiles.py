@@ -2,7 +2,8 @@
 
 import numpy as np
 import pandas as pd
-import code.pyshp.shapefile as shapefile
+#import code.pyshp.shapefile as shapefile
+import shapefile
 import warnings
 
 from shapely.geometry import Polygon, mapping
