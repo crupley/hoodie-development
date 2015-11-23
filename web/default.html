@@ -11,13 +11,13 @@
         padding: 0;
       }
       #map {
-        height: 100%;
+        height: 90%;
       }
       #panel {
         /*copied from map style*/
         direction: ltr;
         overflow: hidden;
-        text-align: center;
+        text-align: left;
         color: rgb(86, 86, 86);
         font-family: Roboto, Arial, sans-serif;
         -webkit-user-select: none;
@@ -33,6 +33,7 @@
         position: absolute;
         top: 50px;
         left: 10px;
+        width: 150px;
       }
 
       #header {
@@ -55,8 +56,30 @@
         position: absolute;
         top: 10px;
         right: 10px;
+      }
 
-
+      #footer {
+        /*copied from map style*/
+        direction: ltr;
+        overflow: hidden;
+        color: rgb(86, 86, 86);
+        font-family: Roboto, Arial, sans-serif;
+        -webkit-user-select: none;
+        font-size: 11px;
+        padding: 0px;
+        border-radius: 10px;
+        -webkit-background-clip: padding-box;
+        box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
+        min-width: 21px;
+        background-color: rgb(255, 255, 255);
+        background-clip: padding-box;
+        /*added*/
+        position: absolute;
+        bottom: 0px;
+        height: 10%;
+        max-height: 10%;
+        width: 100%;
+        margin-top: 10px;
       }
     </style>
   </head>
@@ -155,43 +178,6 @@
             }
           })
         };
-        function info() {
-          var contentString = '<div id="content">'+
-            '<div id="siteNotice">'+
-            '</div>'+
-            '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
-            '<div id="bodyContent">'+
-            '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
-            'sandstone rock formation in the southern part of the '+
-            'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
-            'south west of the nearest large town, Alice Springs; 450&#160;km '+
-            '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
-            'features of the Uluru - Kata Tjuta National Park. Uluru is '+
-            'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
-            'Aboriginal people of the area. It has many springs, waterholes, '+
-            'rock caves and ancient paintings. Uluru is listed as a World '+
-            'Heritage Site.</p>'+
-            '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
-            'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
-            '(last visited June 22, 2009).</p>'+
-            '</div>'+
-            '</div>';
-
-          var infowindow = new google.maps.InfoWindow({
-            content: contentString
-          });
-
-          var marker = new google.maps.Marker({
-            position: mapCenter,
-            map: map,
-            title: 'Uluru (Ayers Rock)'
-          });
-
-          marker.addListener('click', function() {
-            infowindow.open(map, marker);
-          });
-
-        }
 
       </script>
       <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYqyh-lKoQk0GcE75hO10Kbiv3Rs1sUc8&callback=initMap"
@@ -286,6 +272,18 @@
         }); -->
       </div>
       <div id="chart_div" style="width:150; height:200"></div>
+    </div>
+    <div id="footer">
+      <div style="float:left; margin-left: 10px; width: 160px">
+        <h1>About:</h1>
+      </div>
+      <div style="float:left; margin-top: 10px">
+        hoodie SF is a project created to help visualize the fluidity of neighborhood boundaries in the city of San Francisco.<br>
+        <br>
+        It was created by Chris Rupley during studies at Galvanize Inc.<br>
+        <br>
+        Source code and more detailed information on the project is available via the Github repo: <u>hoodie</u><br>
+      </div>
     </div>
   </body>
 </html>
