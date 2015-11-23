@@ -40,6 +40,20 @@ function initMap() {
       {location: new google.maps.LatLng(37.785, -122.435), weight: 3}
     ];
 
+    // map.data.loadGeoJson('https://raw.githubusercontent.com/crupley/hoodie/master/web/heatmap.json');
+
+
+
+
+
+    // map.data.setStyle(function(feature){
+    //   var color = feature.getProperty('color')
+    //   return {
+    //     fillColor: color,
+    //     visible: false
+    //   }
+    // });
+
     var sanFrancisco = new google.maps.LatLng(37.774546, -122.433523);
 
     map = new google.maps.Map(document.getElementById('map'), {
@@ -51,7 +65,13 @@ function initMap() {
     var heatmap = new google.maps.visualization.HeatmapLayer({
       data: heatMapData
     });
-    heatmap.setMap(map);
+
+    var myheatmap = new google.maps.visualization.HeatmapLayer({
+        data: [{location: new google.maps.LatLng(37.782, -122.447), weight: 0.5}]
+    })
+
+    // heatmap.setMap(map);
+    myheatmap.setMap(map)
 };
 
 
