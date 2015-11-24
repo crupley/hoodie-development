@@ -291,12 +291,12 @@ def merge_map_data(path, featuredf, store=False):
 	nclustersmax = 28
 
 	### make null map
-	cnum = cut2cluster('xx', nclustersmax)
+	cnum = cut2cluster('xx', nclustersmax, allowed_nodes=featuredf.index)
 
 	# retain only mutual nodes
-	nodelist = set(featuredf.index).intersection(set(cnum.index))
-	featuredf = featuredf.ix[nodelist]
-	cnum = cnum.ix[nodelist]
+	# nodelist = set(featuredf.index).intersection(set(cnum.index))
+	# featuredf = featuredf.ix[nodelist]
+	# cnum = cnum.ix[nodelist]
 	nclusters = len(cnum.unique())
 
 	clist = gencolors(nclusters)
@@ -321,8 +321,8 @@ def merge_map_data(path, featuredf, store=False):
 	# make all other maps
 	for i, f in enumerate(mapnos):
 		print f
-		cnum = cut2cluster(f, nclustersmax)
-		cnum = cnum.ix[nodelist]
+		cnum = cut2cluster(f, nclustersmax, allowed_nodes=featuredf.index)
+		# cnum = cnum.ix[nodelist]
 
 		fbars = feature_bars(featuredf[fnames[i]], cnum)
 		polys = make_shapefiles(featuredf[['lat', 'lon']],
