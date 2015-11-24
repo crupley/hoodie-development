@@ -149,7 +149,7 @@ def elbow_plot(cutdf, featuredf, maxk=30):
 	return ks, wcsses
 
 
-def cut2cluster(featurelist, nclusters):
+def cut2cluster(featurelist, nclusters, allowed_nodes=None):
 	'''
 	returns Series with cluster number indexed by node number
 
@@ -176,7 +176,17 @@ def cut2cluster(featurelist, nclusters):
 	# g = graph.copy()
 	# edges[edges.nclusters <= nclusters].apply(lambda x: cutrow(x, g), axis=1)
 
-	nodelist = list(set(edges.source).union(set(edges.target)))
+	nodeset = set(edges.source).union(set(edges.target))
+
+	
+	if allowed_nodes is not None:
+		# remove unallowed nodes from nodelist
+		nodeset = nodeset.intersection(set(allowed_nodes))
+
+		# remove unallowed nodes from graph
+		unallowed_nodesg = set(graph.nodes()).difference(set(allowed_nodes))
+		graph.remove_nodes_from(unallowed_nodesg)
+	nodelist = list(nodeset)
 
 	# assign cluster numbers
 	return assign_clusters(nodelist, graph)
@@ -278,7 +288,7 @@ def merge_map_data(path, featuredf, store=False):
 
 
 
-	nclustersmax = 27
+	nclustersmax = 28
 
 	### make null map
 	cnum = cut2cluster('xx', nclustersmax)
