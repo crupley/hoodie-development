@@ -137,6 +137,7 @@
             document.getElementById("results").innerHTML = n
             // document.getElementById("n").innerHTML = event.feature.getProperty("rgmat")[n]
 
+            // color by similarity on click
             map.data.setStyle(function(feature) {
               var n = event.feature.getProperty('neibno')
               document.getElementById("n").innerHTML = n
