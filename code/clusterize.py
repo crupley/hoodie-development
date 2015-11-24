@@ -5,6 +5,7 @@ import networkx as nx
 import os
 import matplotlib
 import cPickle as pickle
+import json
 
 from sklearn.metrics.pairwise import pairwise_distances
 from shapely.geometry import mapping
@@ -276,18 +277,15 @@ def merge_map_data(path, featuredf, store=False):
 	files.remove('xx')
 
 	# incomplete cut list
-	files.remove('000407')
+	files.remove('000104')
 
 	mapnos = [f for f in files if len(f) <= 6]
-	mapnos = ['010405']
+	# mapnos = ['010405']
 
 	fnums = [mapno2list(f) for f in mapnos]
 
 	# column names
 	fnames = map(lambda x: [FDICT[n] for n in x], fnums)
-
-
-
 
 	nclustersmax = 28
 
@@ -295,9 +293,9 @@ def merge_map_data(path, featuredf, store=False):
 	cnum = cut2cluster('xx', nclustersmax, allowed_nodes=featuredf.index)
 
 	# retain only mutual nodes
-	# nodelist = set(featuredf.index).intersection(set(cnum.index))
-	# featuredf = featuredf.ix[nodelist]
-	# cnum = cnum.ix[nodelist]
+	nodelist = set(featuredf.index).intersection(set(cnum.index))
+	featuredf = featuredf.ix[nodelist]
+	cnum = cnum.ix[nodelist]
 	nclusters = len(cnum.unique())
 
 	clist = gencolors(nclusters)
@@ -367,9 +365,9 @@ if __name__ == '__main__':
 	fdf = load_featuredf()
 
 	# may take some time
-	alldf = merge_map_data('results', fdf, store=False)
+	alldf = merge_map_data('results', fdf, store=True)
 
 	gjson = make_json(alldf.cnum, alldf.polygon, alldf.color,
-					  alldf.mapno, alldf.fbars)
+					  alldf.rgmatrix, alldf.mapno, alldf.fbars)
 	with open('results/geo.json', 'wb') as f:
 		f.write(json.dumps(gjson))
