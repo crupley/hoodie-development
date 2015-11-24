@@ -135,10 +135,23 @@
             // var year = document.getElementById("year_slider").value;
             var n = event.feature.getProperty('neibno')
             document.getElementById("results").innerHTML = n
+            // document.getElementById("n").innerHTML = event.feature.getProperty("rgmat")[n]
 
-            map.data.overrideStyle(function(feature, n) {
-              return {
-                fillColor: feature.getProperty("rgmat")[n]
+            map.data.setStyle(function(feature) {
+              var n = event.feature.getProperty('neibno')
+              document.getElementById("n").innerHTML = n
+
+              mapno = event.feature.getProperty("mapno")
+              if (feature.getProperty("mapno") == mapno) {
+                return {
+                  visible: true,
+                  fillColor: feature.getProperty("rgmat")[n],
+                  fillOpacity: 0.65
+                }
+              } else { 
+                return {
+                  visible: false
+                }
               }
             });
 
@@ -280,6 +293,7 @@
         Selected: <p id="results"></p>
         <br>
         test: <p id="test"></p>
+        n: <p id="n"></p>
         <!-- joe's jq
         $(“checkbox”).hover(function(e){
           e.preventDefault():
