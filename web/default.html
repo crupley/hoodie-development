@@ -133,7 +133,11 @@
 
             // Redraw chart on mouseover, given year from slider:
             // var year = document.getElementById("year_slider").value;
-            document.getElementById("results").innerHTML = event.feature.getProperty('neibno')
+            var n = event.feature.getProperty('neibno')
+            document.getElementById("results").innerHTML = n
+
+            // map.data.overrideStyle(event.feature,)
+
             drawChart(event.feature.getProperty('bars'));
 
           });

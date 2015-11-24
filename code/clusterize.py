@@ -240,7 +240,7 @@ def rg_colormatrix(sim):
 def list_(*args): return list(args)
 
 
-def make_json(cnum, polys, clist, mapno, fbars):
+def make_json(cnum, polys, rgmatrix, mapno, fbars):
 	
 	# column names
 	fnamesc = map(lambda x: [FDICT[n] for n in mapno2list(x)], mapno)
@@ -253,9 +253,9 @@ def make_json(cnum, polys, clist, mapno, fbars):
 	for i in xrange(len(cnum)):
 	    featurelist.append({"type": "Feature",
 	                        "properties": {
-	                        "color": clist.iloc[i],
+	                        "color": rgmatrix.iloc[i],
 	                        "mapno": mapno.iloc[i],
-	                        "neibno": cnum.iloc[i],
+	                        "neibno": rgmatrix.iloc[i],
 	                        "bars" : map(list_, fnames[i],
 	                        			 fbars.iloc[i]),
 	                        "visible": False
@@ -278,7 +278,7 @@ def merge_map_data(path, featuredf, store=False):
 	files.remove('000407')
 
 	mapnos = [f for f in files if len(f) <= 6]
-	# mapnos = ['030405']
+	mapnos = ['010405']
 
 	fnums = [mapno2list(f) for f in mapnos]
 
@@ -300,6 +300,7 @@ def merge_map_data(path, featuredf, store=False):
 	nclusters = len(cnum.unique())
 
 	clist = gencolors(nclusters)
+	rgmatrix = rg_colormatrix(most_similar(featuredf, cnum))
 	fbars = feature_bars(featuredf[FDICT.values()], cnum)
 
 	fn = 'data/uscensus/tl_2010_06075_tabblock10/tl_2010_06075_tabblock10.dbf'
@@ -311,6 +312,7 @@ def merge_map_data(path, featuredf, store=False):
 	alldf = pd.DataFrame({'cnum': cnum.unique(),
                       'polygon': polys})
 	alldf['color'] = clist
+	alldf['rgmatrix'] = map(lambda x: list(rgmatrix.ix[x]), cnum.unique())
 	alldf['mapno'] = ''
 	alldf['fbars'] = map(list, fbars.round(2).values)
 
@@ -322,6 +324,8 @@ def merge_map_data(path, featuredf, store=False):
 	for i, f in enumerate(mapnos):
 		print f
 		cnum = cut2cluster(f, nclustersmax, allowed_nodes=featuredf.index)
+		rgmatrix = rg_colormatrix(most_similar(featuredf, cnum))
+
 		# cnum = cnum.ix[nodelist]
 
 		fbars = feature_bars(featuredf[fnames[i]], cnum)
@@ -332,6 +336,7 @@ def merge_map_data(path, featuredf, store=False):
                       'polygon': polys})
 
 		onedf['color'] = clist
+		onedf['rgmatrix'] = map(lambda x: list(rgmatrix.ix[x]), cnum.unique())
 		onedf['mapno'] = f
 		onedf['fbars'] = map(list, fbars.round(2).values)
 
