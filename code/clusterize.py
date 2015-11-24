@@ -206,7 +206,9 @@ def most_similar(featuredf, cluster_labels):
 	'''
 	cluster_means = featuredf.groupby(cluster_labels).mean()
 	df =  pd.DataFrame(pairwise_distances(cluster_means,
-						metric='l2'))
+						metric='l2'),
+					   index = cluster_means.index,
+					   columns = cluster_means.index)
 	return df
 
 
