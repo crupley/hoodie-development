@@ -218,6 +218,15 @@ def gencolors(n, cmap='jet'):
 	return clist
 
 
+def to_rghex(n):
+    return matplotlib.colors.rgb2hex([n, 1-n, 0, 1])
+
+
+def rg_colormatrix(sim):
+    normed = sim / sim.max().max()
+    return normed.applymap(to_rghex)
+
+
 def list_(*args): return list(args)
 
 
