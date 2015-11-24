@@ -256,7 +256,7 @@ def make_json(cnum, polys, clist, rgmatrix, mapno, fbars):
 	                        "color": clist.iloc[i],
 	                        "rgmat": rgmatrix.iloc[i],
 	                        "mapno": mapno.iloc[i],
-	                        "neibno": rgmatrix.iloc[i],
+	                        "neibno": cnum.iloc[i],
 	                        "bars" : map(list_, fnames[i],
 	                        			 fbars.iloc[i]),
 	                        "visible": False
