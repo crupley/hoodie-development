@@ -240,7 +240,7 @@ def rg_colormatrix(sim):
 def list_(*args): return list(args)
 
 
-def make_json(cnum, polys, rgmatrix, mapno, fbars):
+def make_json(cnum, polys, clist, rgmatrix, mapno, fbars):
 	
 	# column names
 	fnamesc = map(lambda x: [FDICT[n] for n in mapno2list(x)], mapno)
@@ -253,7 +253,8 @@ def make_json(cnum, polys, rgmatrix, mapno, fbars):
 	for i in xrange(len(cnum)):
 	    featurelist.append({"type": "Feature",
 	                        "properties": {
-	                        "color": rgmatrix.iloc[i],
+	                        "color": clist.iloc[i],
+	                        "rgmat": rgmatrix.iloc[i],
 	                        "mapno": mapno.iloc[i],
 	                        "neibno": rgmatrix.iloc[i],
 	                        "bars" : map(list_, fnames[i],
