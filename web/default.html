@@ -106,26 +106,56 @@
           map.setMapTypeId(customMapTypeId);
 
           // load geojson
-          map.data.loadGeoJson('https://raw.githubusercontent.com/crupley/hoodie/master/results/geo.json');
-          // map.data.loadGeoJson('https://raw.githubusercontent.com/crupley/hoodie/master/results/outliers.json');
+          // map.data.loadGeoJson('https://raw.githubusercontent.com/crupley/hoodie/master/results/geo.json');
+          map.data.loadGeoJson('https://raw.githubusercontent.com/crupley/hoodie/master/results/test.json');
           // map.data.loadGeoJson('/geo.json');
 
           // set polygon properties
-          map.data.setStyle(function(feature){
-            var color = feature.getProperty('color')
-            return {
-              fillColor: color,
-              visible: false
+          map.data.setStyle(function(feature) {
+            var color = feature.getProperty("color")
+            if (feature.getProperty("mapno") == "") {
+              return {
+                visible: true,
+                fillColor: color
+              }
+            } else { 
+              return {
+                visible: false,
+                fillColor: color
+              }
             }
-          });
+          })
+          
 
           map.data.addListener('click', function(event) {
             map.data.revertStyle();
-            map.data.overrideStyle(event.feature, {strokeWeight: 2, fillColor: '#000000', fillOpacity: 0.3});
+            // map.data.overrideStyle(event.feature, {strokeWeight: 2, fillColor: '#000000', fillOpacity: 0.3});
 
             // Redraw chart on mouseover, given year from slider:
             // var year = document.getElementById("year_slider").value;
-            document.getElementById("results").innerHTML = event.feature.getProperty('neibno')
+            var n = event.feature.getProperty('neibno')
+            document.getElementById("results").innerHTML = n
+            // document.getElementById("n").innerHTML = event.feature.getProperty("rgmat")[n]
+
+            // color by similarity on click
+            map.data.setStyle(function(feature) {
+              var n = event.feature.getProperty('neibno')
+              document.getElementById("n").innerHTML = n
+
+              mapno = event.feature.getProperty("mapno")
+              if (feature.getProperty("mapno") == mapno) {
+                return {
+                  visible: true,
+                  fillColor: feature.getProperty("rgmat")[n],
+                  fillOpacity: 0.65
+                }
+              } else { 
+                return {
+                  visible: false
+                }
+              }
+            });
+
             drawChart(event.feature.getProperty('bars'));
 
           });
@@ -264,6 +294,7 @@
         Selected: <p id="results"></p>
         <br>
         test: <p id="test"></p>
+        n: <p id="n"></p>
         <!-- joe's jq
         $(“checkbox”).hover(function(e){
           e.preventDefault():

@@ -149,7 +149,7 @@ def elbow_plot(cutdf, featuredf, maxk=30):
 	return ks, wcsses
 
 
-def cut2cluster(featurelist, nclusters):
+def cut2cluster(featurelist, nclusters, allowed_nodes=None):
 	'''
 	returns Series with cluster number indexed by node number
 
@@ -176,7 +176,17 @@ def cut2cluster(featurelist, nclusters):
 	# g = graph.copy()
 	# edges[edges.nclusters <= nclusters].apply(lambda x: cutrow(x, g), axis=1)
 
-	nodelist = list(set(edges.source).union(set(edges.target)))
+	nodeset = set(edges.source).union(set(edges.target))
+
+	
+	if allowed_nodes is not None:
+		# remove unallowed nodes from nodelist
+		nodeset = nodeset.intersection(set(allowed_nodes))
+
+		# remove unallowed nodes from graph
+		unallowed_nodesg = set(graph.nodes()).difference(set(allowed_nodes))
+		graph.remove_nodes_from(unallowed_nodesg)
+	nodelist = list(nodeset)
 
 	# assign cluster numbers
 	return assign_clusters(nodelist, graph)
@@ -206,7 +216,9 @@ def most_similar(featuredf, cluster_labels):
 	'''
 	cluster_means = featuredf.groupby(cluster_labels).mean()
 	df =  pd.DataFrame(pairwise_distances(cluster_means,
-						metric='l2'))
+						metric='l2'),
+					   index = cluster_means.index,
+					   columns = cluster_means.index)
 	return df
 
 
@@ -216,10 +228,19 @@ def gencolors(n, cmap='jet'):
 	return clist
 
 
+def to_rghex(n):
+    return matplotlib.colors.rgb2hex([n, 1-n, 0, 1])
+
+
+def rg_colormatrix(sim):
+    normed = sim / sim.max().max()
+    return normed.applymap(to_rghex)
+
+
 def list_(*args): return list(args)
 
 
-def make_json(cnum, polys, clist, mapno, fbars):
+def make_json(cnum, polys, clist, rgmatrix, mapno, fbars):
 	
 	# column names
 	fnamesc = map(lambda x: [FDICT[n] for n in mapno2list(x)], mapno)
@@ -233,6 +254,7 @@ def make_json(cnum, polys, clist, mapno, fbars):
 	    featurelist.append({"type": "Feature",
 	                        "properties": {
 	                        "color": clist.iloc[i],
+	                        "rgmat": rgmatrix.iloc[i],
 	                        "mapno": mapno.iloc[i],
 	                        "neibno": cnum.iloc[i],
 	                        "bars" : map(list_, fnames[i],
@@ -267,18 +289,19 @@ def merge_map_data(path, featuredf, store=False):
 
 
 
-	nclustersmax = 27
+	nclustersmax = 28
 
 	### make null map
-	cnum = cut2cluster('xx', nclustersmax)
+	cnum = cut2cluster('xx', nclustersmax, allowed_nodes=featuredf.index)
 
 	# retain only mutual nodes
-	nodelist = set(featuredf.index).intersection(set(cnum.index))
-	featuredf = featuredf.ix[nodelist]
-	cnum = cnum.ix[nodelist]
+	# nodelist = set(featuredf.index).intersection(set(cnum.index))
+	# featuredf = featuredf.ix[nodelist]
+	# cnum = cnum.ix[nodelist]
 	nclusters = len(cnum.unique())
 
 	clist = gencolors(nclusters)
+	rgmatrix = rg_colormatrix(most_similar(featuredf, cnum))
 	fbars = feature_bars(featuredf[FDICT.values()], cnum)
 
 	fn = 'data/uscensus/tl_2010_06075_tabblock10/tl_2010_06075_tabblock10.dbf'
@@ -290,6 +313,7 @@ def merge_map_data(path, featuredf, store=False):
 	alldf = pd.DataFrame({'cnum': cnum.unique(),
                       'polygon': polys})
 	alldf['color'] = clist
+	alldf['rgmatrix'] = map(lambda x: list(rgmatrix.ix[x]), cnum.unique())
 	alldf['mapno'] = ''
 	alldf['fbars'] = map(list, fbars.round(2).values)
 
@@ -300,8 +324,10 @@ def merge_map_data(path, featuredf, store=False):
 	# make all other maps
 	for i, f in enumerate(mapnos):
 		print f
-		cnum = cut2cluster(f, nclustersmax)
-		cnum = cnum.ix[nodelist]
+		cnum = cut2cluster(f, nclustersmax, allowed_nodes=featuredf.index)
+		rgmatrix = rg_colormatrix(most_similar(featuredf, cnum))
+
+		# cnum = cnum.ix[nodelist]
 
 		fbars = feature_bars(featuredf[fnames[i]], cnum)
 		polys = make_shapefiles(featuredf[['lat', 'lon']],
@@ -311,6 +337,7 @@ def merge_map_data(path, featuredf, store=False):
                       'polygon': polys})
 
 		onedf['color'] = clist
+		onedf['rgmatrix'] = map(lambda x: list(rgmatrix.ix[x]), cnum.unique())
 		onedf['mapno'] = f
 		onedf['fbars'] = map(list, fbars.round(2).values)
 
@@ -340,7 +367,7 @@ if __name__ == '__main__':
 	fdf = load_featuredf()
 
 	# may take some time
-	alldf = merge_map_data('results', fdf, store=True)
+	alldf = merge_map_data('results', fdf, store=False)
 
 	gjson = make_json(alldf.cnum, alldf.polygon, alldf.color,
 					  alldf.mapno, alldf.fbars)
