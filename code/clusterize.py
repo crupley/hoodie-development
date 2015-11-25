@@ -241,7 +241,7 @@ def rg_colormatrix(sim):
 def list_(*args): return list(args)
 
 
-def make_json(cnum, polys, clist, rgmatrix, mapno, fbars):
+def make_json(cnum, polys, rgmatrix, mapno, fbars):
 	
 	# column names
 	fnamesc = map(lambda x: [FDICT[n] for n in mapno2list(x)], mapno)
@@ -254,7 +254,7 @@ def make_json(cnum, polys, clist, rgmatrix, mapno, fbars):
 	for i in xrange(len(cnum)):
 	    featurelist.append({"type": "Feature",
 	                        "properties": {
-	                        "color": clist.iloc[i],
+	                        # "color": clist.iloc[i],
 	                        "rgmat": rgmatrix.iloc[i],
 	                        "mapno": mapno.iloc[i],
 	                        "neibno": cnum.iloc[i],
@@ -310,7 +310,7 @@ def merge_map_data(path, featuredf, store=False):
 
 	alldf = pd.DataFrame({'cnum': cnum.unique(),
                       'polygon': polys})
-	alldf['color'] = clist
+	# alldf['color'] = clist
 	alldf['rgmatrix'] = map(lambda x: list(rgmatrix.ix[x]), cnum.unique())
 	alldf['mapno'] = ''
 	alldf['fbars'] = map(list, fbars.round(2).values)
@@ -334,7 +334,7 @@ def merge_map_data(path, featuredf, store=False):
 		onedf = pd.DataFrame({'cnum': cnum.unique(),
                       'polygon': polys})
 
-		onedf['color'] = clist
+		# onedf['color'] = clist
 		onedf['rgmatrix'] = map(lambda x: list(rgmatrix.ix[x]), cnum.unique())
 		onedf['mapno'] = f
 		onedf['fbars'] = map(list, fbars.round(2).values)
