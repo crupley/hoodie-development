@@ -277,7 +277,7 @@ def merge_map_data(path, featuredf, store=False):
 	files.remove('xx')
 
 	# incomplete cut list
-	files.remove('000104')
+	# files.remove('000104')
 
 	mapnos = [f for f in files if len(f) <= 6]
 	# mapnos = ['010405']
