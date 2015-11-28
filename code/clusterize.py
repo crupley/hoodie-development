@@ -345,6 +345,9 @@ def merge_map_data(path, featuredf, store=False):
 
 		alldf = pd.concat((alldf, onedf), axis=0, ignore_index=True)
 
+	if store:
+		with open('results/alldf.pkl', 'wb') as f:
+			pickle.dump(alldf, f)
 	return alldf
 
 
