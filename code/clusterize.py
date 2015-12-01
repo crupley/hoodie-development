@@ -233,10 +233,30 @@ def to_rghex(n):
     return matplotlib.colors.rgb2hex([n, 1-n, 0, 1])
 
 
-def rg_colormatrix(sim):
-    normed = sim / sim.max().max()
-    return normed.applymap(to_rghex)
+# def rg_colormatrix(sim):
+#     normed = sim / sim.max().max()
+#     return normed.applymap(to_rghex)
 
+def rangerestrict(n):
+    if n > 1:
+        return 1
+    elif n < 0:
+        return 0
+    else:
+        return n
+
+def rg_colormatrix(sim):
+    df = sim.copy()
+    q3 = df.apply(lambda x: np.percentile(x, 75))
+    q1 = df.apply(lambda x: np.percentile(x, 25))
+    iqr = q3 - q1
+    df = df.sub(np.maximum((q1-1.5*iqr).values, df.min().values))
+    q3 = df.apply(lambda x: np.percentile(x, 75))
+    q1 = df.apply(lambda x: np.percentile(x, 25))
+    iqr = q3 - q1
+    df = df.div(np.minimum(q3+1.5*iqr, df.max().values))
+    df = df.applymap(rangerestrict)
+    return df.applymap(to_rghex)
 
 def list_(*args): return list(args)
 
@@ -280,7 +300,7 @@ def merge_map_data(path, featuredf, store=False):
 	# files.remove('000104')
 
 	mapnos = [f for f in files if len(f) <= 6]
-	# mapnos = ['010405']
+	mapnos = ['020408']
 
 	fnums = [mapno2list(f) for f in mapnos]
 
@@ -370,7 +390,7 @@ if __name__ == '__main__':
 	# may take some time
 	alldf = merge_map_data('results', fdf, store=True)
 
-	gjson = make_json(alldf.cnum, alldf.polygon, alldf.color,
+	gjson = make_json(alldf.cnum, alldf.polygon,
 					  alldf.rgmatrix, alldf.mapno, alldf.fbars)
 	with open('results/geo.json', 'wb') as f:
 		f.write(json.dumps(gjson))
