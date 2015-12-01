@@ -129,7 +129,7 @@
 
           map.data.addListener('click', function(event) {
             map.data.revertStyle();
-            // map.data.overrideStyle(event.feature, {strokeWeight: 2, fillColor: '#000000', fillOpacity: 0.3});
+            map.data.overrideStyle(event.feature, {fillColor: '#00ff00', strokeColor: '#ffffff', zIndex: 1000});
 
             // Redraw chart on mouseover, given year from slider:
             // var year = document.getElementById("year_slider").value;
